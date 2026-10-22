@@ -8,7 +8,7 @@ Eine Nextcloud-App, mit der du die Impfungen aller Personen deiner Nextcloud erf
 
 - **Impfhistorie** pro Person: Datum, Impfstoff und optional Praxis, Chargennummer und Notiz. Die Impfstoff-Suche findet auch über Hersteller oder Krankheit („Masern“ → Priorix, M-M-RvaxPro …).
 - **Impfstatus** gegen ein pro Person wählbares Impfschema: überfällig, fällig, demnächst, aktuell, vollständig – mit Datum der nächsten Dosis.
-  - **STIKO-Empfehlungen (Deutschland)**, Stand 2026-09
+  - **STIKO-Empfehlungen (Deutschland)**, Stand 2026-10 – inkl. FSME, sobald eine FSME-Impfung eingetragen ist
   - **Impfplan Österreich** 2026/27 (Version 1.1)
 - **Weitere Impfungen** ohne Standardempfehlung (z. B. Reiseimpfungen) mit „vor X Jahren“.
 - **Betreuer**: Eltern pflegen die Daten ihrer Kinder, die eigene Nextcloud-Konten haben. Jeder sieht nur sich selbst und die Personen, die er betreut.
@@ -30,7 +30,7 @@ Die App ist nicht im Nextcloud App Store gelistet. Installiert wird sie aus dem 
 ### 1. Paket herunterladen
 
 ```sh
-VERSION=0.4.0
+VERSION=0.4.1
 curl -L -o vaccinations.tar.gz \
   "https://github.com/derschneewolf/vaccinations/releases/download/v$VERSION/vaccinations-$VERSION.tar.gz"
 ```

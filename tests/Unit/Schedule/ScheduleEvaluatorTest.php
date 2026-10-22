@@ -288,6 +288,42 @@ class ScheduleEvaluatorTest extends TestCase {
 		$this->assertSame(1, $result['pneumococcal-senior']->dosesIgnored);
 	}
 
+	// ---- TBE (indication, only once started) -----------------------------
+
+	public function testTbeIsHiddenWithoutDocumentation(): void {
+		$result = $this->evaluate('1980-02-29', []);
+
+		$this->assertStatus(RuleStatus::NOT_APPLICABLE, $result['tbe']);
+	}
+
+	public function testStartedTbeSeriesIsChecked(): void {
+		$result = $this->evaluate('1980-02-29', [['fsme-immun', '2026-08-01']]);
+
+		$this->assertStatus(RuleStatus::DUE, $result['tbe']);
+		$this->assertSame('G2', $result['tbe']->nextLabel);
+		$this->assertSame('2026-09-01', $this->due($result['tbe']));
+		$this->assertSame('2026-11-01', $result['tbe']->nextOverdueFrom?->format('Y-m-d'));
+	}
+
+	public function testTbeBoosterAfterThreeThenFiveYears(): void {
+		$series = [['fsme-immun', '2019-03-01'], ['fsme-immun', '2019-04-01'], ['fsme-immun', '2019-11-01']];
+		$result = $this->evaluate('1980-02-29', $series);
+		$this->assertStatus(RuleStatus::OVERDUE, $result['tbe']);
+		$this->assertSame('2022-11-01', $this->due($result['tbe']));
+
+		$result = $this->evaluate('1980-02-29', [...$series, ['encepur', '2022-10-15']]);
+		$this->assertStatus(RuleStatus::COMPLETE, $result['tbe']);
+		$this->assertSame('2027-10-15', $this->due($result['tbe']));
+	}
+
+	public function testTbeEveryThreeYearsFrom50(): void {
+		$result = $this->evaluate('1972-01-01', [
+			['encepur', '2010-03-01'], ['encepur', '2010-04-01'], ['encepur', '2011-02-01'], ['encepur', '2014-02-01'], ['encepur', '2024-05-01'],
+		]);
+
+		$this->assertSame('2027-05-01', $this->due($result['tbe']));
+	}
+
 	// ---- general ----------------------------------------------------------
 
 	public function testMissingBirthDate(): void {

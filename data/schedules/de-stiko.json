@@ -1,15 +1,19 @@
 {
   "$schema": "../schema/schedule.schema.json",
   "id": "de-stiko",
-  "name": { "de": "STIKO-Empfehlungen (Deutschland)", "en": "STIKO recommendations (Germany)" },
-  "version": "2026-09",
-  "scope": "Standardimpfungen für alle Altersgruppen. Indikations-, Berufs- und Reiseimpfungen sind nicht enthalten.",
+  "name": {
+    "de": "STIKO-Empfehlungen (Deutschland)",
+    "en": "STIKO recommendations (Germany)"
+  },
+  "version": "2026-10",
+  "scope": "Standardimpfungen für alle Altersgruppen sowie FSME, sobald eine FSME-Impfung eingetragen ist. Weitere Indikations-, Berufs- und Reiseimpfungen sind nicht enthalten.",
   "simplifications": [
     "Nachholschemata bei spätem Beginn sind vereinfacht abgebildet; maßgeblich ist die ärztliche Beurteilung.",
     "Rotaviren: unabhängig vom Impfstoff 2 Dosen bis zur 32. Lebenswoche (Rotarix: 2 Dosen bis 24 Wochen, RotaTeq: 3 Dosen bis 32 Wochen).",
     "HPV: Ein Abstand unter 5 Monaten zwischen 1. und 2. Dosis (3. Dosis nötig) wird nicht erkannt.",
     "Frühgeborene (3+1-Schema) werden nicht gesondert behandelt.",
-    "RSV-Prophylaxe für Säuglinge (monoklonale Antikörper) ist keine Impfung und nicht enthalten."
+    "RSV-Prophylaxe für Säuglinge (monoklonale Antikörper) ist keine Impfung und nicht enthalten.",
+    "FSME: Auffrischung ab 50 alle 3 Jahre (Encepur); für FSME-IMMUN gilt das erst ab 60 – die App erinnert vorsichtshalber früher. Schnellschemata werden nicht unterschieden."
   ],
   "sources": [
     "https://edoc.rki.de/handle/176904/13181.6",
@@ -19,7 +23,10 @@
   "rules": [
     {
       "id": "td",
-      "diseases": ["tetanus", "diphtheria"],
+      "diseases": [
+        "tetanus",
+        "diphtheria"
+      ],
       "kind": "series",
       "until": "P18Y",
       "reference": "Epid Bull 4/2026, Tab. 1A/1B, Fußnoten c, f, h",
@@ -27,27 +34,64 @@
         {
           "fromAge": "P0D",
           "doses": [
-            { "label": "G1", "age": "P2M" },
-            { "label": "G2", "age": "P4M", "minInterval": "P4W" },
-            { "label": "G3", "age": "P11M", "minInterval": "P6M" },
-            { "label": "A1", "age": "P5Y", "dueUntil": "P7Y", "minInterval": "P5Y" },
-            { "label": "A2", "age": "P9Y", "dueUntil": "P17Y", "minInterval": "P5Y" }
+            {
+              "label": "G1",
+              "age": "P2M"
+            },
+            {
+              "label": "G2",
+              "age": "P4M",
+              "minInterval": "P4W"
+            },
+            {
+              "label": "G3",
+              "age": "P11M",
+              "minInterval": "P6M"
+            },
+            {
+              "label": "A1",
+              "age": "P5Y",
+              "dueUntil": "P7Y",
+              "minInterval": "P5Y"
+            },
+            {
+              "label": "A2",
+              "age": "P9Y",
+              "dueUntil": "P17Y",
+              "minInterval": "P5Y"
+            }
           ]
         },
         {
           "fromAge": "P12M",
           "doses": [
-            { "label": "G1", "age": "P0D" },
-            { "label": "G2", "age": "P0D", "minInterval": "P4W" },
-            { "label": "G3", "age": "P0D", "minInterval": "P6M" }
+            {
+              "label": "G1",
+              "age": "P0D"
+            },
+            {
+              "label": "G2",
+              "age": "P0D",
+              "minInterval": "P4W"
+            },
+            {
+              "label": "G3",
+              "age": "P0D",
+              "minInterval": "P6M"
+            }
           ]
         }
       ],
-      "then": { "every": "P10Y", "grace": "P12M" }
+      "then": {
+        "every": "P10Y",
+        "grace": "P12M"
+      }
     },
     {
       "id": "pertussis",
-      "diseases": ["pertussis"],
+      "diseases": [
+        "pertussis"
+      ],
       "kind": "series",
       "until": "P18Y",
       "reference": "Epid Bull 4/2026, Tab. 1A/1B, Fußnoten c, f, h",
@@ -55,35 +99,75 @@
         {
           "fromAge": "P0D",
           "doses": [
-            { "label": "G1", "age": "P2M" },
-            { "label": "G2", "age": "P4M", "minInterval": "P4W" },
-            { "label": "G3", "age": "P11M", "minInterval": "P6M" },
-            { "label": "A1", "age": "P5Y", "dueUntil": "P7Y", "minInterval": "P5Y" },
-            { "label": "A2", "age": "P9Y", "dueUntil": "P17Y", "minInterval": "P5Y" }
+            {
+              "label": "G1",
+              "age": "P2M"
+            },
+            {
+              "label": "G2",
+              "age": "P4M",
+              "minInterval": "P4W"
+            },
+            {
+              "label": "G3",
+              "age": "P11M",
+              "minInterval": "P6M"
+            },
+            {
+              "label": "A1",
+              "age": "P5Y",
+              "dueUntil": "P7Y",
+              "minInterval": "P5Y"
+            },
+            {
+              "label": "A2",
+              "age": "P9Y",
+              "dueUntil": "P17Y",
+              "minInterval": "P5Y"
+            }
           ]
         },
         {
           "fromAge": "P12M",
           "doses": [
-            { "label": "G1", "age": "P0D" },
-            { "label": "G2", "age": "P0D", "minInterval": "P4W" },
-            { "label": "G3", "age": "P0D", "minInterval": "P6M" }
+            {
+              "label": "G1",
+              "age": "P0D"
+            },
+            {
+              "label": "G2",
+              "age": "P0D",
+              "minInterval": "P4W"
+            },
+            {
+              "label": "G3",
+              "age": "P0D",
+              "minInterval": "P6M"
+            }
           ]
         }
       ]
     },
     {
       "id": "pertussis-adult",
-      "diseases": ["pertussis"],
+      "diseases": [
+        "pertussis"
+      ],
       "kind": "once",
       "fromAge": "P18Y",
       "alignWith": "td",
       "reference": "Epid Bull 4/2026, Tab. 2, Fußnote h: nächste fällige Td-Impfung einmalig als Tdap",
-      "doses": [{ "label": "Tdap" }]
+      "doses": [
+        {
+          "label": "Tdap"
+        }
+      ]
     },
     {
       "id": "polio",
-      "diseases": ["polio"],
+      "diseases": [
+        "polio"
+      ],
       "kind": "series",
       "until": "P18Y",
       "reference": "Epid Bull 4/2026, Tab. 1A/1B, Fußnoten c, f",
@@ -91,25 +175,54 @@
         {
           "fromAge": "P0D",
           "doses": [
-            { "label": "G1", "age": "P2M" },
-            { "label": "G2", "age": "P4M", "minInterval": "P4W" },
-            { "label": "G3", "age": "P11M", "minInterval": "P6M" },
-            { "label": "A1", "age": "P9Y", "dueUntil": "P17Y", "minInterval": "P5Y" }
+            {
+              "label": "G1",
+              "age": "P2M"
+            },
+            {
+              "label": "G2",
+              "age": "P4M",
+              "minInterval": "P4W"
+            },
+            {
+              "label": "G3",
+              "age": "P11M",
+              "minInterval": "P6M"
+            },
+            {
+              "label": "A1",
+              "age": "P9Y",
+              "dueUntil": "P17Y",
+              "minInterval": "P5Y"
+            }
           ]
         },
         {
           "fromAge": "P12M",
           "doses": [
-            { "label": "G1", "age": "P0D" },
-            { "label": "G2", "age": "P0D", "minInterval": "P4W" },
-            { "label": "G3", "age": "P0D", "minInterval": "P6M" }
+            {
+              "label": "G1",
+              "age": "P0D"
+            },
+            {
+              "label": "G2",
+              "age": "P0D",
+              "minInterval": "P4W"
+            },
+            {
+              "label": "G3",
+              "age": "P0D",
+              "minInterval": "P6M"
+            }
           ]
         }
       ]
     },
     {
       "id": "hib",
-      "diseases": ["hib"],
+      "diseases": [
+        "hib"
+      ],
       "kind": "series",
       "until": "P5Y",
       "reference": "Epid Bull 4/2026, Tab. 1A, Fußnoten c, f; Nachholung bis zum 5. Geburtstag",
@@ -117,20 +230,38 @@
         {
           "fromAge": "P0D",
           "doses": [
-            { "label": "G1", "age": "P2M" },
-            { "label": "G2", "age": "P4M", "minInterval": "P4W" },
-            { "label": "G3", "age": "P11M", "minInterval": "P6M" }
+            {
+              "label": "G1",
+              "age": "P2M"
+            },
+            {
+              "label": "G2",
+              "age": "P4M",
+              "minInterval": "P4W"
+            },
+            {
+              "label": "G3",
+              "age": "P11M",
+              "minInterval": "P6M"
+            }
           ]
         },
         {
           "fromAge": "P12M",
-          "doses": [{ "label": "G1", "age": "P0D" }]
+          "doses": [
+            {
+              "label": "G1",
+              "age": "P0D"
+            }
+          ]
         }
       ]
     },
     {
       "id": "hepatitis-b",
-      "diseases": ["hepatitis-b"],
+      "diseases": [
+        "hepatitis-b"
+      ],
       "kind": "series",
       "until": "P18Y",
       "reference": "Epid Bull 4/2026, Tab. 1A, Fußnoten c, f",
@@ -138,24 +269,48 @@
         {
           "fromAge": "P0D",
           "doses": [
-            { "label": "G1", "age": "P2M" },
-            { "label": "G2", "age": "P4M", "minInterval": "P4W" },
-            { "label": "G3", "age": "P11M", "minInterval": "P6M" }
+            {
+              "label": "G1",
+              "age": "P2M"
+            },
+            {
+              "label": "G2",
+              "age": "P4M",
+              "minInterval": "P4W"
+            },
+            {
+              "label": "G3",
+              "age": "P11M",
+              "minInterval": "P6M"
+            }
           ]
         },
         {
           "fromAge": "P12M",
           "doses": [
-            { "label": "G1", "age": "P0D" },
-            { "label": "G2", "age": "P0D", "minInterval": "P4W" },
-            { "label": "G3", "age": "P0D", "minInterval": "P5M" }
+            {
+              "label": "G1",
+              "age": "P0D"
+            },
+            {
+              "label": "G2",
+              "age": "P0D",
+              "minInterval": "P4W"
+            },
+            {
+              "label": "G3",
+              "age": "P0D",
+              "minInterval": "P5M"
+            }
           ]
         }
       ]
     },
     {
       "id": "pneumococcal-child",
-      "diseases": ["pneumococcal"],
+      "diseases": [
+        "pneumococcal"
+      ],
       "kind": "series",
       "until": "P2Y",
       "reference": "Epid Bull 4/2026, Tab. 1A, Fußnoten c, d, f",
@@ -163,31 +318,57 @@
         {
           "fromAge": "P0D",
           "doses": [
-            { "label": "G1", "age": "P2M" },
-            { "label": "G2", "age": "P4M", "minInterval": "P8W" },
-            { "label": "G3", "age": "P11M", "minInterval": "P6M" }
+            {
+              "label": "G1",
+              "age": "P2M"
+            },
+            {
+              "label": "G2",
+              "age": "P4M",
+              "minInterval": "P8W"
+            },
+            {
+              "label": "G3",
+              "age": "P11M",
+              "minInterval": "P6M"
+            }
           ]
         },
         {
           "fromAge": "P12M",
           "doses": [
-            { "label": "G1", "age": "P0D" },
-            { "label": "G2", "age": "P0D", "minInterval": "P8W" }
+            {
+              "label": "G1",
+              "age": "P0D"
+            },
+            {
+              "label": "G2",
+              "age": "P0D",
+              "minInterval": "P8W"
+            }
           ]
         }
       ]
     },
     {
       "id": "pneumococcal-senior",
-      "diseases": ["pneumococcal"],
+      "diseases": [
+        "pneumococcal"
+      ],
       "kind": "once",
       "fromAge": "P60Y",
       "reference": "Epid Bull 4/2026, Tab. 2, Fußnote k: einmalig PCV20 ab 60 Jahren",
-      "doses": [{ "label": "PCV20" }]
+      "doses": [
+        {
+          "label": "PCV20"
+        }
+      ]
     },
     {
       "id": "rotavirus",
-      "diseases": ["rotavirus"],
+      "diseases": [
+        "rotavirus"
+      ],
       "kind": "series",
       "until": "P32W",
       "reference": "Epid Bull 4/2026, Tab. 1A, Fußnote b",
@@ -195,15 +376,26 @@
         {
           "fromAge": "P0D",
           "doses": [
-            { "label": "G1", "age": "P6W", "dueUntil": "P12W" },
-            { "label": "G2", "age": "P10W", "minInterval": "P4W", "dueUntil": "P24W" }
+            {
+              "label": "G1",
+              "age": "P6W",
+              "dueUntil": "P12W"
+            },
+            {
+              "label": "G2",
+              "age": "P10W",
+              "minInterval": "P4W",
+              "dueUntil": "P24W"
+            }
           ]
         }
       ]
     },
     {
       "id": "meningococcal-b",
-      "diseases": ["meningococcal-b"],
+      "diseases": [
+        "meningococcal-b"
+      ],
       "kind": "series",
       "until": "P5Y",
       "reference": "Epid Bull 4/2026, Tab. 1A, Fußnoten e, f; Nachholung bis zum 5. Geburtstag",
@@ -211,32 +403,69 @@
         {
           "fromAge": "P0D",
           "doses": [
-            { "label": "G1", "age": "P2M" },
-            { "label": "G2", "age": "P4M", "minInterval": "P8W" },
-            { "label": "G3", "age": "P12M", "minInterval": "P6M" }
+            {
+              "label": "G1",
+              "age": "P2M"
+            },
+            {
+              "label": "G2",
+              "age": "P4M",
+              "minInterval": "P8W"
+            },
+            {
+              "label": "G3",
+              "age": "P12M",
+              "minInterval": "P6M"
+            }
           ]
         },
         {
           "fromAge": "P12M",
           "doses": [
-            { "label": "G1", "age": "P0D" },
-            { "label": "G2", "age": "P0D", "minInterval": "P8W" },
-            { "label": "G3", "age": "P0D", "minInterval": "P12M" }
+            {
+              "label": "G1",
+              "age": "P0D"
+            },
+            {
+              "label": "G2",
+              "age": "P0D",
+              "minInterval": "P8W"
+            },
+            {
+              "label": "G3",
+              "age": "P0D",
+              "minInterval": "P12M"
+            }
           ]
         },
         {
           "fromAge": "P24M",
           "doses": [
-            { "label": "G1", "age": "P0D" },
-            { "label": "G2", "age": "P0D", "minInterval": "P4W" }
+            {
+              "label": "G1",
+              "age": "P0D"
+            },
+            {
+              "label": "G2",
+              "age": "P0D",
+              "minInterval": "P4W"
+            }
           ]
         }
       ]
     },
     {
       "id": "meningococcal-acwy",
-      "name": { "de": "Meningokokken ACWY", "en": "Meningococcal ACWY" },
-      "diseases": ["meningococcal-a", "meningococcal-c", "meningococcal-w", "meningococcal-y"],
+      "name": {
+        "de": "Meningokokken ACWY",
+        "en": "Meningococcal ACWY"
+      },
+      "diseases": [
+        "meningococcal-a",
+        "meningococcal-c",
+        "meningococcal-w",
+        "meningococcal-y"
+      ],
       "kind": "series",
       "until": "P25Y",
       "countDosesFromAge": "P12Y",
@@ -244,13 +473,23 @@
       "variants": [
         {
           "fromAge": "P0D",
-          "doses": [{ "label": "MenACWY", "age": "P12Y", "dueUntil": "P15Y" }]
+          "doses": [
+            {
+              "label": "MenACWY",
+              "age": "P12Y",
+              "dueUntil": "P15Y"
+            }
+          ]
         }
       ]
     },
     {
       "id": "mmr",
-      "diseases": ["measles", "mumps", "rubella"],
+      "diseases": [
+        "measles",
+        "mumps",
+        "rubella"
+      ],
       "kind": "series",
       "until": "P18Y",
       "reference": "Epid Bull 4/2026, Tab. 1A, Fußnote *",
@@ -258,25 +497,40 @@
         {
           "fromAge": "P0D",
           "doses": [
-            { "label": "G1", "age": "P11M" },
-            { "label": "G2", "age": "P15M", "minInterval": "P4W" }
+            {
+              "label": "G1",
+              "age": "P11M"
+            },
+            {
+              "label": "G2",
+              "age": "P15M",
+              "minInterval": "P4W"
+            }
           ]
         }
       ]
     },
     {
       "id": "measles-adult",
-      "diseases": ["measles"],
+      "diseases": [
+        "measles"
+      ],
       "kind": "once",
       "fromAge": "P18Y",
       "bornAfter": "1970-12-31",
       "satisfiedByTotalDoses": 2,
       "reference": "Epid Bull 4/2026, Tab. 1B/2, Fußnote i: nach 1970 Geborene ab 18 mit unklarem Status oder nur einer Impfung in der Kindheit",
-      "doses": [{ "label": "MMR" }]
+      "doses": [
+        {
+          "label": "MMR"
+        }
+      ]
     },
     {
       "id": "varicella",
-      "diseases": ["varicella"],
+      "diseases": [
+        "varicella"
+      ],
       "kind": "series",
       "until": "P18Y",
       "reference": "Epid Bull 4/2026, Tab. 1A, Fußnote *",
@@ -284,15 +538,24 @@
         {
           "fromAge": "P0D",
           "doses": [
-            { "label": "G1", "age": "P11M" },
-            { "label": "G2", "age": "P15M", "minInterval": "P4W" }
+            {
+              "label": "G1",
+              "age": "P11M"
+            },
+            {
+              "label": "G2",
+              "age": "P15M",
+              "minInterval": "P4W"
+            }
           ]
         }
       ]
     },
     {
       "id": "hpv",
-      "diseases": ["hpv"],
+      "diseases": [
+        "hpv"
+      ],
       "kind": "series",
       "until": "P18Y",
       "reference": "Epid Bull 4/2026, Tab. 1B, Fußnote g",
@@ -300,34 +563,64 @@
         {
           "fromAge": "P0D",
           "doses": [
-            { "label": "G1", "age": "P9Y", "dueUntil": "P15Y" },
-            { "label": "G2", "age": "P9Y", "minInterval": "P5M", "dueUntil": "P15Y" }
+            {
+              "label": "G1",
+              "age": "P9Y",
+              "dueUntil": "P15Y"
+            },
+            {
+              "label": "G2",
+              "age": "P9Y",
+              "minInterval": "P5M",
+              "dueUntil": "P15Y"
+            }
           ]
         },
         {
           "fromAge": "P15Y",
           "doses": [
-            { "label": "G1", "age": "P0D" },
-            { "label": "G2", "age": "P0D", "minInterval": "P4W" },
-            { "label": "G3", "age": "P0D", "minInterval": "P5M" }
+            {
+              "label": "G1",
+              "age": "P0D"
+            },
+            {
+              "label": "G2",
+              "age": "P0D",
+              "minInterval": "P4W"
+            },
+            {
+              "label": "G3",
+              "age": "P0D",
+              "minInterval": "P5M"
+            }
           ]
         }
       ]
     },
     {
       "id": "herpes-zoster",
-      "diseases": ["herpes-zoster"],
+      "diseases": [
+        "herpes-zoster"
+      ],
       "kind": "once",
       "fromAge": "P60Y",
       "reference": "Epid Bull 4/2026, Tab. 2, Fußnote l: 2 Dosen Totimpfstoff im Abstand von 2–6 Monaten",
       "doses": [
-        { "label": "G1" },
-        { "label": "G2", "minInterval": "P2M", "maxInterval": "P6M" }
+        {
+          "label": "G1"
+        },
+        {
+          "label": "G2",
+          "minInterval": "P2M",
+          "maxInterval": "P6M"
+        }
       ]
     },
     {
       "id": "influenza",
-      "diseases": ["influenza"],
+      "diseases": [
+        "influenza"
+      ],
       "kind": "seasonal",
       "fromAge": "P60Y",
       "seasonStart": "09-01",
@@ -336,7 +629,9 @@
     },
     {
       "id": "covid-19",
-      "diseases": ["covid-19"],
+      "diseases": [
+        "covid-19"
+      ],
       "kind": "seasonal",
       "fromAge": "P75Y",
       "seasonStart": "09-01",
@@ -345,11 +640,64 @@
     },
     {
       "id": "rsv",
-      "diseases": ["rsv"],
+      "diseases": [
+        "rsv"
+      ],
       "kind": "once",
       "fromAge": "P75Y",
       "reference": "Epid Bull 4/2026, Tab. 2, Fußnote n: einmalig ab 75 Jahren, vor der RSV-Saison",
-      "doses": [{ "label": "RSV" }]
+      "doses": [
+        {
+          "label": "RSV"
+        }
+      ]
+    },
+    {
+      "id": "tbe",
+      "diseases": [
+        "tbe"
+      ],
+      "kind": "series",
+      "until": "P150Y",
+      "onlyIfDocumented": true,
+      "reference": "STIKO: Indikationsimpfung bei Zeckenexposition in FSME-Risikogebieten; Schema nach Fachinformation (2. Dosis nach 1–3 Monaten, 3. Dosis nach 5–12 bzw. 9–12 Monaten, 1. Auffrischung nach 3 Jahren, dann alle 5 Jahre, ab 50 (Encepur) bzw. 60 (FSME-IMMUN) alle 3 Jahre). Wird nur geprüft, wenn mindestens eine FSME-Impfung eingetragen ist.",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            {
+              "label": "G1",
+              "age": "P1Y"
+            },
+            {
+              "label": "G2",
+              "age": "P1Y",
+              "minInterval": "P1M",
+              "maxInterval": "P3M"
+            },
+            {
+              "label": "G3",
+              "age": "P1Y",
+              "minInterval": "P5M",
+              "maxInterval": "P12M"
+            },
+            {
+              "label": "A1",
+              "age": "P1Y",
+              "minInterval": "P3Y",
+              "maxInterval": "P4Y"
+            }
+          ]
+        }
+      ],
+      "then": {
+        "every": "P5Y",
+        "grace": "P12M",
+        "later": {
+          "fromAge": "P50Y",
+          "every": "P3Y"
+        }
+      }
     }
   ]
 }

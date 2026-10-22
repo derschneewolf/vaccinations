@@ -69,11 +69,12 @@ Dateien in `data/schedules/`, Schema `data/schema/schedule.schema.json`. Pro Per
 
 | Schema | Datei | Prüfübersicht |
 |---|---|---|
-| STIKO-Empfehlungen (Deutschland), Stand 2026-09 | `de-stiko.json` | [`STIKO-REGELN.md`](STIKO-REGELN.md) |
+| STIKO-Empfehlungen (Deutschland), Stand 2026-10 (inkl. FSME, sobald begonnen) | `de-stiko.json` | [`STIKO-REGELN.md`](STIKO-REGELN.md) |
 | Impfplan Österreich 2026/27 (V. 1.1) | `at-impfplan.json` | [`IMPFPLAN-AT-REGELN.md`](IMPFPLAN-AT-REGELN.md) |
 
 Regelarten:
 - `series` – Dosen nach Alter (`age`, `dueUntil`, `minInterval`, `maxInterval`), Varianten je nach Alter bei der ersten Dosis (`fromAge`), gilt bis `until`; optional `then.every` für Auffrischungen (Td alle 10 Jahre) und `then.later` für kürzere Abstände ab einem Alter (Österreich: Tdap ab 60 alle 5 Jahre)
+- `onlyIfDocumented` (alle Arten) – Regel gilt erst, wenn mindestens eine passende Impfung eingetragen ist (STIKO: FSME)
 - `once` – ab `fromAge` (PCV20 ab 60, Zoster 2 Dosen mit `maxInterval`), optional `bornAfter`, `satisfiedByTotalDoses`, `alignWith` (Tdap mit der nächsten Td)
 - `seasonal` – jährlich ab `fromAge` in der Saison `seasonStart`–`seasonEnd`
 

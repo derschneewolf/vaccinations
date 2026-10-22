@@ -131,6 +131,10 @@
               "type": "string"
             },
             "description": "Display name, e.g. for groups of diseases. Default: the disease names."
+          },
+          "onlyIfDocumented": {
+            "type": "boolean",
+            "description": "The rule only applies once at least one dose is documented, e.g. indication vaccinations like TBE in risk areas."
           }
         },
         "oneOf": [
@@ -209,7 +213,8 @@
                   }
                 }
               },
-              "name": true
+              "name": true,
+              "onlyIfDocumented": true
             },
             "required": [
               "until",
@@ -248,7 +253,8 @@
                   "$ref": "#/$defs/dose"
                 }
               },
-              "name": true
+              "name": true,
+              "onlyIfDocumented": true
             },
             "required": [
               "fromAge",
@@ -275,7 +281,8 @@
                 "type": "string",
                 "pattern": "^\\d{2}-\\d{2}$"
               },
-              "name": true
+              "name": true,
+              "onlyIfDocumented": true
             },
             "required": [
               "fromAge",

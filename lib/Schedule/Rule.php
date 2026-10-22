@@ -32,6 +32,8 @@ final readonly class Rule {
 		public string $reference,
 		/** @var array<string, string> display name per language; empty: disease names */
 		public array $names = [],
+		/** only applies once at least one dose is documented (indication vaccinations such as TBE) */
+		public bool $onlyIfDocumented = false,
 		// series
 		public ?DateInterval $until = null,
 		public ?DateInterval $countDosesFromAge = null,

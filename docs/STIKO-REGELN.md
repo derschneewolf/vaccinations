@@ -1,6 +1,6 @@
 # STIKO-Regeln der App – zur fachlichen Prüfung
 
-Stand der Regeln: **2026-09** · Datei: `data/schedules/de-stiko.json`
+Stand der Regeln: **2026-10** · Datei: `data/schedules/de-stiko.json`
 Quelle: STIKO-Empfehlungen 2026, Epidemiologisches Bulletin 4/2026 (Tab. 1A/1B, Tab. 2 mit Fußnoten); COVID-19-Aktualisierung 07/2026 (G-BA-Beschluss 09/2026); MenACWY/MenB-Stand laut KV Sachsen-Anhalt 02/2026.
 
 Diese Tabelle fasst zusammen, **was die App prüft**. Bitte gegen den offiziellen Impfkalender gegenlesen; Abweichungen als Issue oder Pull-Request melden.
@@ -46,6 +46,19 @@ Später Beginn (ab 12 Monaten) bei Tetanus/Diphtherie/Pertussis/Polio: vereinfac
 | COVID-19 | ab 75: jährlich, Saison wie Influenza |
 | RSV | ab 75: einmal |
 
+## FSME (Indikationsimpfung)
+
+Die STIKO empfiehlt FSME bei Zeckenexposition in Risikogebieten. Die App prüft FSME deshalb **nur, wenn mindestens eine FSME-Impfung eingetragen ist** – sonst erscheint keine Zeile.
+
+| Dosis | Abstand | überfällig ab |
+|---|---|---|
+| G2 | 1–3 Monate nach G1 | 3 Monate nach G1 |
+| G3 | 5–12 Monate nach G2 (FSME-IMMUN; Encepur 9–12) | 12 Monate nach G2 |
+| 1. Auffrischung | 3 Jahre nach G3 | 4 Jahre nach G3 |
+| weitere | alle 5 Jahre, ab 50 alle 3 Jahre | 12 Monate nach Fälligkeit |
+
+Ab welchem Alter alle 3 Jahre aufgefrischt wird, hängt vom Impfstoff ab (Encepur ab 50, FSME-IMMUN ab 60). Die App nimmt vorsichtshalber 50.
+
 ## Wie die App bewertet
 
 | Status | Bedeutung |
@@ -68,4 +81,4 @@ Später Beginn (ab 12 Monaten) bei Tetanus/Diphtherie/Pertussis/Polio: vereinfac
 - HPV: Ein Abstand unter 5 Monaten zwischen 1. und 2. Dosis (dann 3. Dosis nötig) wird nicht erkannt.
 - Frühgeborene (3+1-Schema) werden nicht gesondert behandelt.
 - RSV-Prophylaxe für Säuglinge (Antikörper, keine Impfung) ist nicht enthalten.
-- Nicht enthalten: Indikations-, Berufs- und Reiseimpfungen (z. B. FSME, Hepatitis A).
+- Nicht enthalten: weitere Indikations-, Berufs- und Reiseimpfungen (z. B. Hepatitis A, Typhus) – sie erscheinen unter „Weitere Impfungen“.

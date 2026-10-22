@@ -54,6 +54,9 @@ class ScheduleEvaluator {
 	 */
 	private function evaluateRule(Rule $rule, ?DateTimeImmutable $birthDate, array $doses, DateTimeImmutable $today, ?RuleStatus $aligned): RuleStatus {
 		$dates = $this->doseDates($rule, $doses);
+		if ($rule->onlyIfDocumented && $dates === []) {
+			return $this->status($rule, RuleStatus::NOT_APPLICABLE, $dates);
+		}
 		if ($birthDate === null) {
 			return $this->status($rule, RuleStatus::MISSING_BIRTH_DATE, $dates);
 		}

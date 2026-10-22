@@ -86,6 +86,7 @@ final readonly class Schedule implements JsonSerializable {
 			kind: (string)$data['kind'],
 			reference: (string)($data['reference'] ?? ''),
 			names: array_map('strval', (array)($data['name'] ?? [])),
+			onlyIfDocumented: (bool)($data['onlyIfDocumented'] ?? false),
 			until: self::interval($data['until'] ?? null),
 			countDosesFromAge: self::interval($data['countDosesFromAge'] ?? null),
 			variants: array_map(
