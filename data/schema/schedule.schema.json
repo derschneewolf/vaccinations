@@ -189,6 +189,23 @@
                   "grace": {
                     "$ref": "#/$defs/duration",
                     "description": "Overdue after due date + grace."
+                  },
+                  "later": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "fromAge",
+                      "every"
+                    ],
+                    "description": "Shorter booster interval from a certain age, e.g. every 5 years from 60.",
+                    "properties": {
+                      "fromAge": {
+                        "$ref": "#/$defs/duration"
+                      },
+                      "every": {
+                        "$ref": "#/$defs/duration"
+                      }
+                    }
                   }
                 }
               },

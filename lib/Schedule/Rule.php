@@ -38,6 +38,9 @@ final readonly class Rule {
 		public array $variants = [],
 		public ?DateInterval $boosterEvery = null,
 		public ?DateInterval $boosterGrace = null,
+		/** from this age on, boosters use $laterBoosterEvery (e.g. every 5 instead of 10 years from 60) */
+		public ?DateInterval $laterBoosterFromAge = null,
+		public ?DateInterval $laterBoosterEvery = null,
 		// once + seasonal
 		public ?DateInterval $fromAge = null,
 		// once

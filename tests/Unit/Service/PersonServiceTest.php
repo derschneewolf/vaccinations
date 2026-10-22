@@ -81,7 +81,7 @@ class PersonServiceTest extends TestCase {
 		$this->personMapper->expects($this->never())->method('update');
 
 		try {
-			$this->service->updatePerson('frank', 'kind', ['scheduleId' => 'at-impfplan', 'birthDate' => '2014-07-01']);
+			$this->service->updatePerson('frank', 'kind', ['scheduleId' => 'xx-unknown', 'birthDate' => '2014-07-01']);
 			$this->fail('Expected ValidationException');
 		} catch (ValidationException $e) {
 			$this->assertSame('scheduleId', $e->field);

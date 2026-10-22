@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "capvaxive",
+  "name": "Capvaxive",
+  "aliases": [
+    "PCV21"
+  ],
+  "manufacturer": "MSD",
+  "diseases": [
+    "pneumococcal"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "AT",
+    "DE"
+  ]
+}

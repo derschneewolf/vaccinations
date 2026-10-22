@@ -65,10 +65,15 @@ Betreuer-Zuordnungen pflegt der Admin in den Admin-Einstellungen der App.
 
 ## Impfkalender
 
-Datei `data/schedules/de-stiko.json`, Schema `data/schema/schedule.schema.json`, fachliche Übersicht zum Gegenprüfen: [`STIKO-REGELN.md`](STIKO-REGELN.md).
+Dateien in `data/schedules/`, Schema `data/schema/schedule.schema.json`. Pro Person auswählbar.
+
+| Schema | Datei | Prüfübersicht |
+|---|---|---|
+| STIKO-Empfehlungen (Deutschland), Stand 2026-09 | `de-stiko.json` | [`STIKO-REGELN.md`](STIKO-REGELN.md) |
+| Impfplan Österreich 2026/27 (V. 1.1) | `at-impfplan.json` | [`IMPFPLAN-AT-REGELN.md`](IMPFPLAN-AT-REGELN.md) |
 
 Regelarten:
-- `series` – Dosen nach Alter (`age`, `dueUntil`, `minInterval`), Varianten je nach Alter bei der ersten Dosis (`fromAge`), gilt bis `until`; optional `then.every` für Auffrischungen (Td alle 10 Jahre)
+- `series` – Dosen nach Alter (`age`, `dueUntil`, `minInterval`, `maxInterval`), Varianten je nach Alter bei der ersten Dosis (`fromAge`), gilt bis `until`; optional `then.every` für Auffrischungen (Td alle 10 Jahre) und `then.later` für kürzere Abstände ab einem Alter (Österreich: Tdap ab 60 alle 5 Jahre)
 - `once` – ab `fromAge` (PCV20 ab 60, Zoster 2 Dosen mit `maxInterval`), optional `bornAfter`, `satisfiedByTotalDoses`, `alignWith` (Tdap mit der nächsten Td)
 - `seasonal` – jährlich ab `fromAge` in der Saison `seasonStart`–`seasonEnd`
 

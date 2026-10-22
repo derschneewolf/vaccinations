@@ -1,0 +1,340 @@
+{
+  "$schema": "../schema/schedule.schema.json",
+  "id": "at-impfplan",
+  "name": { "de": "Impfplan Österreich", "en": "Austrian vaccination plan" },
+  "version": "2026/27 (Version 1.1)",
+  "scope": "Allgemein empfohlene Impfungen für alle Altersgruppen, unabhängig davon, ob sie im kostenfreien Impfprogramm enthalten sind. Indikations-, Berufs- und Reiseimpfungen sind nicht enthalten.",
+  "simplifications": [
+    "Nachholschemata bei spätem Beginn sind vereinfacht abgebildet; maßgeblich ist die ärztliche Beurteilung.",
+    "Rotaviren: unabhängig vom Impfstoff 2 Dosen bis zur 32. Lebenswoche (Rotarix: 2 Dosen bis 24 Wochen, RotaTeq: 3 Dosen bis 32 Wochen).",
+    "FSME: Schnellschemata und die je nach Impfstoff unterschiedlichen Abstände der 3. Dosis (FSME-Immun 5–12, Encepur 9–12 Monate) werden nicht unterschieden.",
+    "Influenza: Kinder, die zum ersten Mal geimpft werden, brauchen 2 Dosen – das wird nicht geprüft.",
+    "COVID-19: Die Auffrischung wird allen ab 12 angeboten; geprüft wird nur die vorrangige Empfehlung ab 60.",
+    "Masern-Mumps-Röteln: In jedem Alter nachholbar; Personen ohne dokumentierte Impfung erscheinen als „nicht dokumentiert“.",
+    "Einige Angaben stammen aus Sekundärquellen und sind in docs/IMPFPLAN-AT-REGELN.md als „zu prüfen“ markiert."
+  ],
+  "sources": [
+    "https://www.sozialministerium.gv.at/Themen/Gesundheit/Impfen/impfplan.html",
+    "https://broschuerenservice.sozialministerium.gv.at/Home/Download?publicationId=420&attachmentName=Impfplan_Oesterreich_2026_2027.pdf",
+    "https://www.news.at/technik/neuer-impfplan-keuchhusten-auffrischung-wieder-alle-zehn-jahre",
+    "https://kinderarzt.net/impfplan-2018-saeuglinge-und-kleinkinder/",
+    "https://kinderarzt.net/impfplan-2018-schulkinder/"
+  ],
+  "rules": [
+    {
+      "id": "tdap",
+      "diseases": ["diphtheria", "tetanus", "pertussis"],
+      "kind": "series",
+      "until": "P18Y",
+      "reference": "Impfplan 2026/27, Kap. Diphtherie: 2+1-Schema (3. Lebensmonat, +2 Mon., 10–12 Mon.), Auffrischung im 6. Lebensjahr und 5 Jahre später (spätestens 14–15 J.), danach Tdap alle 10 Jahre, ab 60 alle 5 Jahre",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P2M", "dueUntil": "P4M" },
+            { "label": "G2", "age": "P4M", "minInterval": "P8W" },
+            { "label": "G3", "age": "P10M", "minInterval": "P6M", "dueUntil": "P13M" },
+            { "label": "A1", "age": "P5Y", "dueUntil": "P7Y" },
+            { "label": "A2", "age": "P10Y", "minInterval": "P5Y", "dueUntil": "P15Y" }
+          ]
+        },
+        {
+          "fromAge": "P12M",
+          "doses": [
+            { "label": "G1", "age": "P0D" },
+            { "label": "G2", "age": "P0D", "minInterval": "P4W" },
+            { "label": "G3", "age": "P0D", "minInterval": "P6M" }
+          ]
+        }
+      ],
+      "then": { "every": "P10Y", "grace": "P12M", "later": { "fromAge": "P60Y", "every": "P5Y" } }
+    },
+    {
+      "id": "polio",
+      "diseases": ["polio"],
+      "kind": "series",
+      "until": "P18Y",
+      "reference": "Impfplan 2026/27, Kap. Diphtherie: beide Schulauffrischungen mit 4-fach-Impfstoff (inkl. IPV); weitere Polio-Auffrischungen nur bei spezieller Indikation",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P2M", "dueUntil": "P4M" },
+            { "label": "G2", "age": "P4M", "minInterval": "P8W" },
+            { "label": "G3", "age": "P10M", "minInterval": "P6M", "dueUntil": "P13M" },
+            { "label": "A1", "age": "P5Y", "dueUntil": "P7Y" },
+            { "label": "A2", "age": "P10Y", "minInterval": "P5Y", "dueUntil": "P15Y" }
+          ]
+        },
+        {
+          "fromAge": "P12M",
+          "doses": [
+            { "label": "G1", "age": "P0D" },
+            { "label": "G2", "age": "P0D", "minInterval": "P4W" },
+            { "label": "G3", "age": "P0D", "minInterval": "P6M" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hib",
+      "diseases": ["hib"],
+      "kind": "series",
+      "until": "P5Y",
+      "reference": "Impfplan 2026/27, Kap. Haemophilus influenzae Typ B: 2+1-Schema, nur bis zum vollendeten 5. Lebensjahr",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P2M", "dueUntil": "P4M" },
+            { "label": "G2", "age": "P4M", "minInterval": "P8W" },
+            { "label": "G3", "age": "P10M", "minInterval": "P6M", "dueUntil": "P13M" }
+          ]
+        },
+        {
+          "fromAge": "P12M",
+          "doses": [{ "label": "G1", "age": "P0D" }]
+        }
+      ]
+    },
+    {
+      "id": "hepatitis-b",
+      "diseases": ["hepatitis-b"],
+      "kind": "series",
+      "until": "P60Y",
+      "reference": "Impfplan 2026/27: Grundimmunisierung im Säuglingsalter (6-fach); Nachholen in jedem Alter, Grundimmunisierung empfohlen bis zum vollendeten 60. Lebensjahr (zu prüfen: Auffrischung im Schulalter)",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P2M", "dueUntil": "P4M" },
+            { "label": "G2", "age": "P4M", "minInterval": "P8W" },
+            { "label": "G3", "age": "P10M", "minInterval": "P6M", "dueUntil": "P13M" }
+          ]
+        },
+        {
+          "fromAge": "P12M",
+          "doses": [
+            { "label": "G1", "age": "P0D" },
+            { "label": "G2", "age": "P0D", "minInterval": "P4W" },
+            { "label": "G3", "age": "P0D", "minInterval": "P5M" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pneumococcal-child",
+      "diseases": ["pneumococcal"],
+      "kind": "series",
+      "until": "P2Y",
+      "reference": "Impfplan 2025/26 (Sekundärquelle): 1. Dosis ab 6. Lebenswoche, 2. Dosis 8 Wochen später, 3. Dosis mit 11–15 Monaten",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P2M", "dueUntil": "P4M" },
+            { "label": "G2", "age": "P4M", "minInterval": "P8W" },
+            { "label": "G3", "age": "P11M", "minInterval": "P6M", "dueUntil": "P16M" }
+          ]
+        },
+        {
+          "fromAge": "P12M",
+          "doses": [
+            { "label": "G1", "age": "P0D" },
+            { "label": "G2", "age": "P0D", "minInterval": "P8W" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pneumococcal-senior",
+      "diseases": ["pneumococcal"],
+      "kind": "once",
+      "fromAge": "P60Y",
+      "reference": "Impfplan (zu prüfen): ab dem vollendeten 60. Lebensjahr einmalig Konjugatimpfstoff, im öffentlichen Impfprogramm kostenfrei",
+      "doses": [{ "label": "PCV" }]
+    },
+    {
+      "id": "rotavirus",
+      "diseases": ["rotavirus"],
+      "kind": "series",
+      "until": "P32W",
+      "reference": "Impfplan 2025/26 (Sekundärquelle): ab der 6. Lebenswoche, Rotarix 2 Dosen bis 24 Wochen, RotaTeq 3 Dosen bis 32 Wochen, Abstand 4 Wochen",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P6W", "dueUntil": "P12W" },
+            { "label": "G2", "age": "P10W", "minInterval": "P4W", "dueUntil": "P24W" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "meningococcal-b",
+      "diseases": ["meningococcal-b"],
+      "kind": "series",
+      "until": "P2Y",
+      "reference": "Impfplan 2025/26 (Sekundärquelle): Beginn mit 2–5 Monaten, 2. Dosis ≥ 2 Monate später, 3. Dosis mit 12–15 Monaten; nicht kostenfrei (Nachholgrenze zu prüfen)",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P2M", "dueUntil": "P6M" },
+            { "label": "G2", "age": "P4M", "minInterval": "P8W" },
+            { "label": "G3", "age": "P12M", "minInterval": "P6M", "dueUntil": "P16M" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "meningococcal-acwy-toddler",
+      "name": { "de": "Meningokokken ACWY (Kleinkind)", "en": "Meningococcal ACWY (toddler)" },
+      "diseases": ["meningococcal-a", "meningococcal-c", "meningococcal-w", "meningococcal-y"],
+      "kind": "series",
+      "until": "P10Y",
+      "reference": "Impfplan 2025/26 (Sekundärquelle): eine Dosis möglichst im 13. Lebensmonat, Nachholen bis zum vollendeten 10. Lebensjahr; nicht kostenfrei",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [{ "label": "MenACWY", "age": "P12M", "dueUntil": "P13M" }]
+        }
+      ]
+    },
+    {
+      "id": "meningococcal-acwy-teen",
+      "name": { "de": "Meningokokken ACWY (Jugendliche)", "en": "Meningococcal ACWY (adolescents)" },
+      "diseases": ["meningococcal-a", "meningococcal-c", "meningococcal-w", "meningococcal-y"],
+      "kind": "series",
+      "until": "P18Y",
+      "countDosesFromAge": "P10Y",
+      "reference": "Impfplan 2025/26 (Sekundärquelle): eine Dosis vom vollendeten 10. bis zum vollendeten 13. Lebensjahr, unabhängig von früheren MenC- oder MenACWY-Impfungen, kostenfrei; Nachholen bis 18",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [{ "label": "MenACWY", "age": "P10Y", "dueUntil": "P13Y" }]
+        }
+      ]
+    },
+    {
+      "id": "mmr",
+      "diseases": ["measles", "mumps", "rubella"],
+      "kind": "series",
+      "until": "P150Y",
+      "reference": "Impfplan 2025/26 (Sekundärquelle): 1. Dosis ab dem vollendeten 9. Lebensmonat, 2. Dosis bei Erstimpfung im 1. Lebensjahr nach 3 Monaten, sonst frühestens nach 4 Wochen; in jedem Alter nachholbar und kostenfrei",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P9M", "dueUntil": "P13M" },
+            { "label": "G2", "age": "P12M", "minInterval": "P4W" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "varicella",
+      "diseases": ["varicella"],
+      "kind": "series",
+      "until": "P18Y",
+      "reference": "Impfplan 2025/26 (Sekundärquelle): 2 Dosen ab dem vollendeten 1. Lebensjahr, bevorzugt 6 Wochen Abstand (mind. 4 Wochen); nicht kostenfrei",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P12M" },
+            { "label": "G2", "age": "P12M", "minInterval": "P4W" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hepatitis-a",
+      "diseases": ["hepatitis-a"],
+      "kind": "series",
+      "until": "P18Y",
+      "reference": "Impfplan (zu prüfen): ab dem vollendeten 1. Lebensjahr, 2 Dosen im Abstand von 6–12 Monaten; nicht kostenfrei",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P12M" },
+            { "label": "G2", "age": "P12M", "minInterval": "P6M", "maxInterval": "P12M" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hpv",
+      "diseases": ["hpv"],
+      "kind": "series",
+      "until": "P21Y",
+      "reference": "Impfplan 2025/26 (Sekundärquelle): kostenfrei vom vollendeten 9. bis zum vollendeten 21. Lebensjahr, bevorzugt in der 4. Schulstufe, 2 Dosen im Abstand von 6–12 Monaten",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P9Y", "dueUntil": "P12Y" },
+            { "label": "G2", "age": "P9Y", "minInterval": "P6M", "maxInterval": "P12M" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tbe",
+      "diseases": ["tbe"],
+      "kind": "series",
+      "until": "P150Y",
+      "reference": "Impfplan 2026/27, Kap. FSME: für alle empfohlen ab dem vollendeten 1. Lebensjahr; 2. Dosis nach 1–3 Monaten, 3. Dosis nach 5–12 Monaten, 1. Auffrischung nach 3 Jahren, dann alle 5 Jahre, ab 60 alle 3 Jahre",
+      "variants": [
+        {
+          "fromAge": "P0D",
+          "doses": [
+            { "label": "G1", "age": "P1Y" },
+            { "label": "G2", "age": "P1Y", "minInterval": "P1M", "maxInterval": "P3M" },
+            { "label": "G3", "age": "P1Y", "minInterval": "P5M", "maxInterval": "P12M" },
+            { "label": "A1", "age": "P1Y", "minInterval": "P3Y", "maxInterval": "P4Y" }
+          ]
+        }
+      ],
+      "then": { "every": "P5Y", "grace": "P12M", "later": { "fromAge": "P60Y", "every": "P3Y" } }
+    },
+    {
+      "id": "influenza",
+      "diseases": ["influenza"],
+      "kind": "seasonal",
+      "fromAge": "P6M",
+      "seasonStart": "10-01",
+      "seasonEnd": "03-31",
+      "reference": "Impfplan (zu prüfen): jährlich für alle ab dem vollendeten 6. Lebensmonat; ab 60 Hochdosis-Impfstoff"
+    },
+    {
+      "id": "covid-19",
+      "diseases": ["covid-19"],
+      "kind": "seasonal",
+      "fromAge": "P60Y",
+      "seasonStart": "09-01",
+      "seasonEnd": "03-31",
+      "reference": "Impfplan 2026/27, Kap. COVID-19: Auffrischung im Spätsommer/Herbst allen ab 12 angeboten, besonders empfohlen ab 60"
+    },
+    {
+      "id": "herpes-zoster",
+      "diseases": ["herpes-zoster"],
+      "kind": "once",
+      "fromAge": "P50Y",
+      "reference": "Impfplan (zu prüfen): ab dem vollendeten 50. Lebensjahr 2 Dosen Totimpfstoff im Abstand von 2–6 Monaten; ab 60 kostenfrei",
+      "doses": [
+        { "label": "G1" },
+        { "label": "G2", "minInterval": "P2M", "maxInterval": "P6M" }
+      ]
+    },
+    {
+      "id": "rsv",
+      "diseases": ["rsv"],
+      "kind": "once",
+      "fromAge": "P60Y",
+      "reference": "Impfplan (zu prüfen): einmalig ab dem vollendeten 60. Lebensjahr",
+      "doses": [{ "label": "RSV" }]
+    }
+  ]
+}

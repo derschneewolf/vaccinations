@@ -97,6 +97,8 @@ final readonly class Schedule implements JsonSerializable {
 			),
 			boosterEvery: self::interval($then['every'] ?? null),
 			boosterGrace: self::interval($then['grace'] ?? null),
+			laterBoosterFromAge: self::interval(((array)($then['later'] ?? []))['fromAge'] ?? null),
+			laterBoosterEvery: self::interval(((array)($then['later'] ?? []))['every'] ?? null),
 			fromAge: self::interval($data['fromAge'] ?? null),
 			bornAfter: isset($data['bornAfter']) ? new DateTimeImmutable((string)$data['bornAfter']) : null,
 			satisfiedByTotalDoses: isset($data['satisfiedByTotalDoses']) ? (int)$data['satisfiedByTotalDoses'] : null,

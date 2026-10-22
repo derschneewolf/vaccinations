@@ -80,7 +80,7 @@ class ScheduleEvaluator {
 		$seriesEnd = $rule->until === null ? null : $birthDate->add($rule->until);
 		if ($seriesEnd !== null && $today >= $seriesEnd) {
 			if ($rule->boosterEvery !== null) {
-				return $this->evaluateBooster($rule, $dates, $today);
+				return $this->evaluateBooster($rule, $birthDate, $dates, $today);
 			}
 			return $this->status($rule, $dates === [] ? RuleStatus::NOT_APPLICABLE : RuleStatus::DOCUMENTED, $dates, ignored: $ignored);
 		}
@@ -92,7 +92,7 @@ class ScheduleEvaluator {
 		}
 		if ($count >= count($variant->doses)) {
 			return $rule->boosterEvery !== null
-				? $this->evaluateBooster($rule, $dates, $today)
+				? $this->evaluateBooster($rule, $birthDate, $dates, $today)
 				: $this->status($rule, RuleStatus::COMPLETE, $dates, ignored: $ignored);
 		}
 
@@ -114,14 +114,21 @@ class ScheduleEvaluator {
 	/**
 	 * Periodic booster after a completed series, e.g. Td every 10 years.
 	 *
+	 * With a later interval (e.g. every 5 years from 60) the booster is due
+	 * after the regular interval, but no later than the later interval once
+	 * that age is reached:  min(last + every, max(last + laterEvery, laterFromAge)).
+	 *
 	 * @param list<DateTimeImmutable> $dates
 	 */
-	private function evaluateBooster(Rule $rule, array $dates, DateTimeImmutable $today): RuleStatus {
+	private function evaluateBooster(Rule $rule, DateTimeImmutable $birthDate, array $dates, DateTimeImmutable $today): RuleStatus {
 		$last = end($dates);
 		if ($last === false || $rule->boosterEvery === null) {
 			return $this->status($rule, RuleStatus::NOT_DOCUMENTED, $dates);
 		}
 		$dueFrom = $last->add($rule->boosterEvery);
+		if ($rule->laterBoosterFromAge !== null && $rule->laterBoosterEvery !== null) {
+			$dueFrom = min($dueFrom, max($last->add($rule->laterBoosterEvery), $birthDate->add($rule->laterBoosterFromAge)));
+		}
 		$overdueFrom = $dueFrom->add($rule->boosterGrace ?? new DateInterval(self::DEFAULT_GRACE));
 		return $this->scheduled($rule, $dates, null, $dueFrom, $overdueFrom, $today);
 	}
