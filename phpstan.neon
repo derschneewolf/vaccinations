@@ -1,0 +1,11 @@
+parameters:
+  level: 8
+  paths:
+    - lib
+  ignoreErrors:
+    # Doctrine DBAL is provided by the Nextcloud server at runtime, not by nextcloud/ocp
+    - '#unknown class Doctrine\\DBAL#'
+    # Nextcloud recommends the defensive instanceof check in event listeners
+    -
+      identifier: instanceof.alwaysTrue
+      path: lib/Listener/*

@@ -1,0 +1,7 @@
+{
+  "diseases": [
+    { "id": "hepatitis-a", "name": { "de": "Hepatitis A", "en": "Hepatitis A" } },
+    { "id": "hepatitis-b", "name": { "de": "Hepatitis B", "en": "Hepatitis B" } },
+    { "id": "measles",     "name": { "de": "Masern", "en": "Measles" } }
+  ]
+}

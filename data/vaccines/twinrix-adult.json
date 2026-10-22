@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "twinrix-adult",
+  "name": "Twinrix Erwachsene",
+  "manufacturer": "GSK",
+  "diseases": ["hepatitis-a", "hepatitis-b"],
+  "type": "inactivated",
+  "variant": "adult",
+  "markets": ["DE", "AT"]
+}

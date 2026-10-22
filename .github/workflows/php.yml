@@ -1,0 +1,25 @@
+name: PHP
+
+on:
+  pull_request:
+    paths: ['lib/**', 'tests/**', 'data/**', 'composer.*', 'phpstan.neon', '.php-cs-fixer.dist.php']
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - run: composer install --no-interaction --no-progress
+      - run: composer lint
+      - run: composer cs:check
+      - run: composer phpstan
+      - run: composer test:unit

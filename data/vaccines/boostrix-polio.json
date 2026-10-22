@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "boostrix-polio",
+  "name": "Boostrix Polio",
+  "manufacturer": "GSK",
+  "diseases": ["tetanus", "diphtheria", "pertussis", "polio"],
+  "type": "toxoid",
+  "variant": "adult",
+  "markets": ["DE"]
+}

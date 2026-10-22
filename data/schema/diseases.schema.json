@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Disease catalogue",
+  "type": "object",
+  "required": ["diseases"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "diseases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+          "name": {
+            "type": "object",
+            "required": ["de", "en"],
+            "additionalProperties": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

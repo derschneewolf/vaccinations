@@ -1,0 +1,9 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "priorix",
+  "name": "Priorix",
+  "manufacturer": "GSK",
+  "diseases": ["measles", "mumps", "rubella"],
+  "type": "live",
+  "markets": ["DE"]
+}

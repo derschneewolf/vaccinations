@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/OWNER/vaccinations/data/schema/vaccine.schema.json",
+  "title": "Vaccine",
+  "description": "One vaccine product. One file per vaccine in data/vaccines/<id>.json – the file name must equal the id.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "diseases"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Stable identifier, stored in the database. Never rename once released."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Trade name as printed on the package / in the vaccination card, e.g. \"Twinrix Erwachsene\"."
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "description": "Alternative spellings or regional names used for search."
+    },
+    "manufacturer": {
+      "type": "string"
+    },
+    "diseases": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "description": "Disease ids this vaccine protects against. Must exist in data/diseases.json (checked by bin/validate-data)."
+    },
+    "type": {
+      "enum": [
+        "live",
+        "inactivated",
+        "mrna",
+        "vector",
+        "toxoid",
+        "subunit",
+        "other"
+      ],
+      "description": "Relevant for minimum intervals between live vaccines."
+    },
+    "variant": {
+      "enum": [
+        "adult",
+        "pediatric",
+        "any"
+      ],
+      "default": "any",
+      "description": "e.g. Twinrix Kinder vs. Erwachsene, Tdap vs. TDaP."
+    },
+    "markets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z]{2}$"
+      },
+      "description": "ISO 3166-1 countries where the product is/was available."
+    },
+    "discontinued": {
+      "type": "boolean",
+      "default": false
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "description": "Reference, e.g. PEI or EMA product page."
+    }
+  }
+}
