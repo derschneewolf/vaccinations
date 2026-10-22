@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/OWNER/vaccinations/data/schema/vaccine.schema.json",
+  "$id": "https://github.com/derschneewolf/vaccinations/data/schema/vaccine.schema.json",
   "title": "Vaccine",
   "description": "One vaccine product. One file per vaccine in data/vaccines/<id>.json – the file name must equal the id.",
   "type": "object",

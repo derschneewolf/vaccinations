@@ -12,8 +12,8 @@ The vaccine-to-disease mapping is maintained as open data in the repository and 
     <author>Frank</author>
     <namespace>Vaccinations</namespace>
     <category>organization</category>
-    <bugs>https://github.com/OWNER/vaccinations/issues</bugs>
-    <repository type="git">https://github.com/OWNER/vaccinations</repository>
+    <bugs>https://github.com/derschneewolf/vaccinations/issues</bugs>
+    <repository type="git">https://github.com/derschneewolf/vaccinations</repository>
     <dependencies>
         <!-- NC 35 requires PHP >= 8.3, NC 33/34 still support 8.2 -->
         <php min-version="8.2"/>
