@@ -7,7 +7,7 @@
     <description><![CDATA[Record vaccinations (date, vaccine, optional practice) for every user and check them against a selectable vaccination schedule (initially the German STIKO schedule). Shows overdue and upcoming vaccinations.
 
 The vaccine-to-disease mapping is maintained as open data in the repository and can be extended via pull request.]]></description>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <licence>agpl</licence>
     <author>Frank</author>
     <namespace>Vaccinations</namespace>
@@ -25,4 +25,11 @@ The vaccine-to-disease mapping is maintained as open data in the repository and 
         <command>OCA\Vaccinations\Command\GuardianList</command>
         <command>OCA\Vaccinations\Command\GuardianRemove</command>
     </commands>
+    <navigations>
+        <navigation>
+            <name>Vaccinations</name>
+            <route>vaccinations.page.index</route>
+            <icon>app.svg</icon>
+        </navigation>
+    </navigations>
 </info>

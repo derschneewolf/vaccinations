@@ -1,6 +1,14 @@
 # Entwicklungsinstanz auf der Synology DiskStation
 
-Nextcloud + PostgreSQL + Cron als Container-Manager-Projekt. Das Repo selbst wird als App eingehängt – Änderungen nach `git pull` sind sofort aktiv, ohne Neubau.
+Nextcloud + PostgreSQL + Cron + Frontend-Build als Container-Manager-Projekt. Das Repo selbst wird als App eingehängt – Änderungen nach `git pull` sind sofort aktiv, ohne Neubau.
+
+| Container | Aufgabe |
+|---|---|
+| `app` | Nextcloud (Apache) auf Port `NC_PORT` |
+| `db` | PostgreSQL 17 |
+| `cron` | Nextcloud-Hintergrundjobs alle 5 Minuten |
+| `frontend` | baut die Oberfläche nach `js/` und `css/` und baut bei jeder Änderung automatisch neu (`npm run watch`) |
+| `init-permissions` | läuft einmal beim Start und gibt `custom_apps` an `www-data` |
 
 Nur fürs LAN gedacht: kein HTTPS, Debug-Modus an.
 
@@ -51,8 +59,13 @@ sudo docker exec vaccinations-dev-app-1 chown www-data:www-data /var/www/html/cu
 **Neuen Stand holen:**
 ```sh
 cd /volume2/docker/vaccinations && git pull
+cd dev && sudo docker compose -p vaccinations-dev up -d
+sudo docker exec -u www-data vaccinations-dev-app-1 php occ upgrade
 ```
-PHP-Änderungen sind sofort aktiv. Bei neuen DB-Migrationen oder einer neuen App-Version zusätzlich `occ upgrade` ausführen.
+- `git pull` holt den Code; PHP-Änderungen sind damit sofort aktiv.
+- `docker compose up -d` übernimmt Änderungen an `compose.yaml` (z. B. neue Container). Ohne Änderungen passiert nichts.
+- `occ upgrade` ist nötig, wenn sich die App-Version in `appinfo/info.xml` geändert hat (neue Migrationen, Befehle, Navigation). Sonst meldet es nur „Nextcloud is already latest version“.
+- Die Oberfläche baut der `frontend`-Container automatisch neu (ca. 20–60 s). Fortschritt im Log des Containers `vaccinations-dev-frontend-1`; danach im Browser neu laden.
 
 **occ aufrufen** – Container Manager → Container → `vaccinations-dev-app-1` → Terminal → *Erstellen* mit Befehl `bash`, dann:
 ```sh

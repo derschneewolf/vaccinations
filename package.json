@@ -1,14 +1,39 @@
 {
   "name": "vaccinations",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "validate:data": "node bin/validate-data.mjs"
+    "build": "vite --mode production build",
+    "dev": "vite --mode development build",
+    "watch": "vite --mode development build --watch",
+    "validate:data": "node bin/validate-data.mjs",
+    "l10n": "node bin/build-l10n.mjs"
   },
   "devDependencies": {
+    "@nextcloud/browserslist-config": "^3.1.2",
+    "@nextcloud/vite-config": "^2.5.4",
     "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1"
+    "ajv-formats": "^3.0.1",
+    "sass": "^1.106.1",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.7"
+  },
+  "browserslist": [
+    "extends @nextcloud/browserslist-config"
+  ],
+  "engines": {
+    "node": "^22.0.0",
+    "npm": "^10.0.0"
+  },
+  "dependencies": {
+    "@mdi/js": "^7.4.47",
+    "@nextcloud/axios": "^2.6.0",
+    "@nextcloud/dialogs": "^7.5.0",
+    "@nextcloud/l10n": "^3.4.1",
+    "@nextcloud/router": "^3.2.0",
+    "@nextcloud/vue": "^9.13.1",
+    "vue": "^3.5.44"
   }
 }

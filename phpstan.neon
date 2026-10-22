@@ -4,7 +4,9 @@ parameters:
     - lib
   ignoreErrors:
     # Doctrine DBAL is provided by the Nextcloud server at runtime, not by nextcloud/ocp
-    - '#unknown class Doctrine\\DBAL#'
+    -
+      message: '#unknown class Doctrine\\DBAL#'
+      reportUnmatched: false
     # Nextcloud recommends the defensive instanceof check in event listeners
     -
       identifier: instanceof.alwaysTrue

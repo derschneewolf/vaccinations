@@ -60,6 +60,15 @@ services:
     entrypoint: /cron.sh
     volumes: *app-volumes
 
+  # builds the frontend into js/ and css/ and rebuilds on every change (e.g. after git pull)
+  frontend:
+    image: node:22-alpine
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm ci --no-audit --no-fund && npm run watch"
+    volumes:
+      - ../:/app
+
 volumes:
   db:
   nextcloud:
