@@ -10,7 +10,9 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "OCA\\Vaccinations\\Tests\\": "tests/"
+      "OCA\\Vaccinations\\Tests\\": "tests/",
+      "OCP\\": "vendor/nextcloud/ocp/OCP/",
+      "NCU\\": "vendor/nextcloud/ocp/NCU/"
     }
   },
   "require": {
