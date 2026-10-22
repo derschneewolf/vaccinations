@@ -80,14 +80,32 @@ occ vaccinations:guardian:remove <betreuer> <person>
 
 ## Update
 
-Neues Paket herunterladen, den alten Ordner `vaccinations` ersetzen und die Datenbank aktualisieren – die erfassten Impfungen bleiben erhalten:
+Neues Paket herunterladen (wie unter [Installation](#1-paket-herunterladen), mit der neuen Versionsnummer), den alten Ordner `vaccinations` ersetzen und die Datenbank aktualisieren. Die erfassten Impfungen liegen in der Datenbank und bleiben erhalten.
+
+**Docker:**
 
 ```sh
-# Beispiel Docker
 docker exec nextcloud rm -rf /var/www/html/custom_apps/vaccinations
 docker cp vaccinations.tar.gz nextcloud:/tmp/
 docker exec nextcloud sh -c "tar -xzf /tmp/vaccinations.tar.gz -C /var/www/html/custom_apps && chown -R www-data:www-data /var/www/html/custom_apps/vaccinations"
 docker exec -u www-data nextcloud php occ upgrade
+```
+
+**Snap:**
+
+```sh
+sudo rm -rf /var/snap/nextcloud/current/nextcloud/extra-apps/vaccinations
+sudo tar -xzf vaccinations.tar.gz -C /var/snap/nextcloud/current/nextcloud/extra-apps
+sudo nextcloud.occ upgrade
+```
+
+**Klassische Installation:**
+
+```sh
+sudo rm -rf /var/www/nextcloud/apps/vaccinations
+sudo tar -xzf vaccinations.tar.gz -C /var/www/nextcloud/apps
+sudo chown -R www-data:www-data /var/www/nextcloud/apps/vaccinations
+sudo -u www-data php /var/www/nextcloud/occ upgrade
 ```
 
 Danach im Browser einmal **Strg + F5**, damit die neue Oberfläche geladen wird.
