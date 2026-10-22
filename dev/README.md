@@ -39,6 +39,13 @@ Beide Test-User haben das Passwort `DEV_USER_PASSWORD`. Außerdem: Debug-Modus, 
 
 > Wird der Hook nicht ausgeführt (im Log steht „lacks the executable flag“), wurde das Repo ohne Dateirechte kopiert. Dann: `chmod +x hooks/post-installation/*.sh` und die Instanz neu aufsetzen (siehe unten).
 
+## Fehlerbehebung
+
+**„Cannot write into "apps" directory“ auf der App-Seite:** Der Ordner `custom_apps` gehört `root`. Seit dem Init-Container `init-permissions` passiert das bei neuen Instanzen nicht mehr; bei einer älteren Instanz einmalig:
+```sh
+sudo docker exec vaccinations-dev-app-1 chown www-data:www-data /var/www/html/custom_apps
+```
+
 ## Im Alltag
 
 **Neuen Stand holen:**

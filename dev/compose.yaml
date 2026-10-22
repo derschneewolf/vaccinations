@@ -13,11 +13,24 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
 
+  # Docker creates custom_apps as root because the app is bind-mounted into it,
+  # and the image only initialises that folder when it is empty. Without this,
+  # Nextcloud cannot write to custom_apps and the app management page fails.
+  init-permissions:
+    image: alpine:3
+    restart: "no"
+    command: sh -c "mkdir -p /var/www/html/custom_apps && chown 33:33 /var/www/html/custom_apps"
+    volumes:
+      - nextcloud:/var/www/html
+
   app:
     image: nextcloud:${NC_VERSION:-35}-apache
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_started
+      init-permissions:
+        condition: service_completed_successfully
     ports:
       - "${NC_PORT:-8090}:80"
     environment:
@@ -40,7 +53,10 @@ services:
     image: nextcloud:${NC_VERSION:-35}-apache
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_started
+      init-permissions:
+        condition: service_completed_successfully
     entrypoint: /cron.sh
     volumes: *app-volumes
 
