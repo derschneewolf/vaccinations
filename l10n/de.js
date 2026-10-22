@@ -8,6 +8,10 @@ OC.L10N.register(
 			"%n Dosis",
 			"%n Dosen"
 		],
+		"_%n earlier dose does not count_::_%n earlier doses do not count_": [
+			"%n frühere Dosis zählt nicht",
+			"%n frühere Dosen zählen nicht"
+		],
 		"_%n month ago_::_%n months ago_": [
 			"vor %n Monat",
 			"vor %n Monaten"

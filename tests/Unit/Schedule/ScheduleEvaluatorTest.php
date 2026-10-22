@@ -141,6 +141,17 @@ class ScheduleEvaluatorTest extends TestCase {
 		$this->assertSame('2026-08-05', $this->due($result['hpv']));
 	}
 
+	public function testMenAcwyBefore12DoesNotCountButIsNoLongerUndocumented(): void {
+		// Nimenrix at 10: STIKO recommends the dose at 12–14 regardless of earlier vaccinations
+		$result = $this->evaluate('2014-03-28', [['nimenrix', '2024-08-15']]);
+
+		$this->assertStatus(RuleStatus::DUE, $result['meningococcal-acwy']);
+		$this->assertSame(0, $result['meningococcal-acwy']->dosesCounted);
+		$this->assertSame(1, $result['meningococcal-acwy']->dosesIgnored);
+		$this->assertSame('2026-03-28', $this->due($result['meningococcal-acwy']));
+		$this->assertSame('2029-03-28', $result['meningococcal-acwy']->nextOverdueFrom?->format('Y-m-d'));
+	}
+
 	public function testMenAcwyIgnoresMenCFromInfancy(): void {
 		$result = $this->evaluate('2013-01-15', [['neisvac-c', '2014-01-20']]);
 
@@ -206,6 +217,13 @@ class ScheduleEvaluatorTest extends TestCase {
 		$this->assertStatus(RuleStatus::NOT_APPLICABLE, $result['measles-adult']);
 	}
 
+	public function testOneChildhoodMmrDoseMakesAdultMeaslesDue(): void {
+		$result = $this->evaluate('1985-01-01', [['m-m-rvaxpro', '1986-01-10']]);
+
+		$this->assertStatus(RuleStatus::DUE, $result['measles-adult']);
+		$this->assertSame(1, $result['measles-adult']->dosesIgnored);
+	}
+
 	public function testMeaslesRuleDoesNotApplyBefore1971(): void {
 		$result = $this->evaluate('1970-12-31', []);
 
@@ -264,7 +282,10 @@ class ScheduleEvaluatorTest extends TestCase {
 	public function testChildhoodPneumococcalDosesDoNotCountForSeniors(): void {
 		$result = $this->evaluate('1960-01-01', [['prevenar-13', '2015-01-01']]);
 
-		$this->assertStatus(RuleStatus::NOT_DOCUMENTED, $result['pneumococcal-senior']);
+		// the earlier dose does not count, but the history is documented: due, not "not documented"
+		$this->assertStatus(RuleStatus::DUE, $result['pneumococcal-senior']);
+		$this->assertSame(0, $result['pneumococcal-senior']->dosesCounted);
+		$this->assertSame(1, $result['pneumococcal-senior']->dosesIgnored);
 	}
 
 	// ---- general ----------------------------------------------------------

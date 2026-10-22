@@ -42,6 +42,8 @@ final readonly class RuleStatus implements JsonSerializable {
 		public string $reference = '',
 		/** @var array<string, string> */
 		public array $names = [],
+		/** documented doses that do not count, e.g. given before the recommended age */
+		public int $dosesIgnored = 0,
 	) {
 	}
 
@@ -55,6 +57,7 @@ final readonly class RuleStatus implements JsonSerializable {
 			'names' => $this->names === [] ? null : $this->names,
 			'status' => $this->status,
 			'dosesCounted' => $this->dosesCounted,
+			'dosesIgnored' => $this->dosesIgnored,
 			'lastDose' => $this->lastDose?->format('Y-m-d'),
 			'next' => $this->nextDueFrom === null ? null : [
 				'label' => $this->nextLabel,

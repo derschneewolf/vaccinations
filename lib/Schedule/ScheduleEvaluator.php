@@ -69,9 +69,12 @@ class ScheduleEvaluator {
 	 * @param list<DateTimeImmutable> $dates
 	 */
 	private function evaluateSeries(Rule $rule, DateTimeImmutable $birthDate, array $dates, DateTimeImmutable $today): RuleStatus {
+		$ignored = 0;
 		if ($rule->countDosesFromAge !== null) {
 			$countFrom = $birthDate->add($rule->countDosesFromAge);
-			$dates = array_values(array_filter($dates, static fn (DateTimeImmutable $date): bool => $date >= $countFrom));
+			$counted = array_values(array_filter($dates, static fn (DateTimeImmutable $date): bool => $date >= $countFrom));
+			$ignored = count($dates) - count($counted);
+			$dates = $counted;
 		}
 
 		$seriesEnd = $rule->until === null ? null : $birthDate->add($rule->until);
@@ -79,7 +82,7 @@ class ScheduleEvaluator {
 			if ($rule->boosterEvery !== null) {
 				return $this->evaluateBooster($rule, $dates, $today);
 			}
-			return $this->status($rule, $dates === [] ? RuleStatus::NOT_APPLICABLE : RuleStatus::DOCUMENTED, $dates);
+			return $this->status($rule, $dates === [] ? RuleStatus::NOT_APPLICABLE : RuleStatus::DOCUMENTED, $dates, ignored: $ignored);
 		}
 
 		$variant = $this->selectVariant($rule, $birthDate, $dates[0] ?? $today);
@@ -90,7 +93,7 @@ class ScheduleEvaluator {
 		if ($count >= count($variant->doses)) {
 			return $rule->boosterEvery !== null
 				? $this->evaluateBooster($rule, $dates, $today)
-				: $this->status($rule, RuleStatus::COMPLETE, $dates);
+				: $this->status($rule, RuleStatus::COMPLETE, $dates, ignored: $ignored);
 		}
 
 		$slot = $variant->doses[$count];
@@ -105,7 +108,7 @@ class ScheduleEvaluator {
 			default => $dueFrom->add(new DateInterval(self::DEFAULT_GRACE)),
 		};
 
-		return $this->scheduled($rule, $dates, $slot->label, $dueFrom, max($overdueFrom, $dueFrom), $today);
+		return $this->scheduled($rule, $dates, $slot->label, $dueFrom, max($overdueFrom, $dueFrom), $today, $ignored);
 	}
 
 	/**
@@ -136,9 +139,10 @@ class ScheduleEvaluator {
 			return $this->status($rule, $today < $start ? RuleStatus::NOT_APPLICABLE : RuleStatus::COMPLETE, $dates);
 		}
 		$counted = array_values(array_filter($dates, static fn (DateTimeImmutable $date): bool => $date >= $start));
+		$ignored = count($dates) - count($counted);
 		$count = count($counted);
 		if ($count >= count($rule->doses)) {
-			return $this->status($rule, RuleStatus::COMPLETE, $counted);
+			return $this->status($rule, RuleStatus::COMPLETE, $counted, ignored: $ignored);
 		}
 
 		$slot = $rule->doses[$count];
@@ -154,7 +158,7 @@ class ScheduleEvaluator {
 		// one-time recommendations without a deadline are "due", never "overdue"
 		$overdueFrom = $last !== null && $slot->maxInterval !== null ? $last->add($slot->maxInterval) : null;
 
-		return $this->scheduled($rule, $counted, $slot->label, $dueFrom, $overdueFrom, $today);
+		return $this->scheduled($rule, $counted, $slot->label, $dueFrom, $overdueFrom, $today, $ignored);
 	}
 
 	/**
@@ -251,7 +255,7 @@ class ScheduleEvaluator {
 	/**
 	 * @param list<DateTimeImmutable> $dates
 	 */
-	private function scheduled(Rule $rule, array $dates, ?string $label, DateTimeImmutable $dueFrom, ?DateTimeImmutable $overdueFrom, DateTimeImmutable $today): RuleStatus {
+	private function scheduled(Rule $rule, array $dates, ?string $label, DateTimeImmutable $dueFrom, ?DateTimeImmutable $overdueFrom, DateTimeImmutable $today, int $ignored = 0): RuleStatus {
 		if ($today < $dueFrom) {
 			$days = (int)$today->diff($dueFrom)->days;
 			$status = $days <= self::UPCOMING_DAYS ? RuleStatus::UPCOMING : RuleStatus::PLANNED;
@@ -259,14 +263,15 @@ class ScheduleEvaluator {
 			if ($dates !== [] && $status === RuleStatus::PLANNED && $label === null) {
 				$status = RuleStatus::COMPLETE;
 			}
-		} elseif ($dates === []) {
+		} elseif ($dates === [] && $ignored === 0) {
+			// nothing at all documented; doses that do not count still prove a real history
 			$status = RuleStatus::NOT_DOCUMENTED;
 		} elseif ($overdueFrom !== null && $today > $overdueFrom) {
 			$status = RuleStatus::OVERDUE;
 		} else {
 			$status = RuleStatus::DUE;
 		}
-		return $this->status($rule, $status, $dates, $label, $dueFrom, $overdueFrom);
+		return $this->status($rule, $status, $dates, $label, $dueFrom, $overdueFrom, $ignored);
 	}
 
 	/**
@@ -279,6 +284,7 @@ class ScheduleEvaluator {
 		?string $label = null,
 		?DateTimeImmutable $dueFrom = null,
 		?DateTimeImmutable $overdueFrom = null,
+		int $ignored = 0,
 	): RuleStatus {
 		$last = end($dates);
 		return new RuleStatus(
@@ -292,6 +298,7 @@ class ScheduleEvaluator {
 			nextOverdueFrom: $overdueFrom,
 			reference: $rule->reference,
 			names: $rule->names,
+			dosesIgnored: $ignored,
 		);
 	}
 }

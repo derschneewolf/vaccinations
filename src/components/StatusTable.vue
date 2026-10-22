@@ -33,6 +33,9 @@
 							{{ n('vaccinations', '%n dose', '%n doses', row.dosesCounted) }},
 							{{ t('vaccinations', 'last {date}', { date: formatDate(row.lastDose) }) }}
 						</template>
+						<div v-if="row.dosesIgnored > 0" class="status__ignored">
+							{{ n('vaccinations', '%n earlier dose does not count', '%n earlier doses do not count', row.dosesIgnored) }}
+						</div>
 					</td>
 					<td>{{ nextText(row) }}</td>
 				</tr>
@@ -139,14 +142,17 @@ const isLater = (row) => row.status === 'planned' && row.dosesCounted === 0 && (
 const rows = computed(() => allRows.value.filter((row) => !isLater(row)))
 const laterRows = computed(() => allRows.value.filter(isLater))
 
-// diseases with documented doses that the status table above does not cover
-// (e.g. typhoid, hepatitis A, polio in adults); identical histories share a row
+// doses the status table above does not account for (e.g. typhoid, hepatitis A,
+// polio in adults, a MenC-only dose next to the MenACWY row); identical histories share a row
 const otherRows = computed(() => {
-	const covered = new Set(rows.value.flatMap((row) => row.diseaseIds))
 	const datesByDisease = new Map()
 	for (const record of props.records) {
-		for (const diseaseId of props.catalog.vaccine(record.vaccineId)?.diseaseIds ?? []) {
-			if (!covered.has(diseaseId)) {
+		const vaccineDiseases = props.catalog.vaccine(record.vaccineId)?.diseaseIds ?? []
+		// a row accounts for a dose only if the vaccine covers all diseases of the row
+		const isAccountedFor = (diseaseId) => rows.value.some((row) => row.diseaseIds.includes(diseaseId)
+			&& row.diseaseIds.every((id) => vaccineDiseases.includes(id)))
+		for (const diseaseId of vaccineDiseases) {
+			if (!isAccountedFor(diseaseId)) {
 				datesByDisease.set(diseaseId, new Set([...(datesByDisease.get(diseaseId) ?? []), record.administeredOn]))
 			}
 		}
@@ -281,6 +287,11 @@ function nextText(row) {
 	&__schedule {
 		font-weight: normal;
 		color: var(--color-text-maxcontrast);
+	}
+
+	&__ignored {
+		color: var(--color-text-maxcontrast);
+		font-size: var(--font-size-small, 13px);
 	}
 
 	&__subheading {

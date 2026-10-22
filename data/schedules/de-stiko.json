@@ -244,7 +244,7 @@
       "variants": [
         {
           "fromAge": "P0D",
-          "doses": [{ "label": "G1", "age": "P12Y", "dueUntil": "P15Y" }]
+          "doses": [{ "label": "MenACWY", "age": "P12Y", "dueUntil": "P15Y" }]
         }
       ]
     },
