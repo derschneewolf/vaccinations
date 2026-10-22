@@ -17,7 +17,7 @@ use OCA\Vaccinations\Catalog\Catalog;
  * a real gap and gets due/overdue.
  */
 class ScheduleEvaluator {
-	public const UPCOMING_DAYS = 90;
+	public const UPCOMING_DAYS = 60;
 	private const DEFAULT_GRACE = 'P3M';
 
 	public function __construct(

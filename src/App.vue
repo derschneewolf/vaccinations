@@ -3,9 +3,9 @@
 		<NcAppNavigation :aria-label="t('vaccinations', 'People')">
 			<template #list>
 				<NcAppNavigationCaption :name="t('vaccinations', 'People')" />
-				<NcAppNavigationItem v-for="person in persons"
+				<NcAppNavigationItem v-for="person in personsWithLight"
 					:key="person.userId"
-					:name="person.displayName"
+					:name="person.isSelf ? t('vaccinations', '{name} (you)', { name: person.displayName }) : person.displayName"
 					:active="person.userId === selectedUserId"
 					@click="selectedUserId = person.userId">
 					<template #icon>
@@ -16,8 +16,13 @@
 							disable-menu
 							disable-tooltip />
 					</template>
-					<template v-if="person.isSelf" #counter>
-						<span class="vaccinations__self">{{ t('vaccinations', 'You') }}</span>
+					<template #counter>
+						<span class="vaccinations__light"
+							:class="`vaccinations__light--${person.light.level}`"
+							:title="person.light.title">
+							<NcIconSvgWrapper v-if="person.light.level === 'ok'" :path="mdiCheck" :size="14" />
+							{{ person.light.label }}
+						</span>
 					</template>
 				</NcAppNavigationItem>
 			</template>
@@ -38,13 +43,14 @@
 				:key="selectedPerson.userId"
 				:person="selectedPerson"
 				:catalog="catalog"
-				@person-updated="onPersonUpdated" />
+				@person-updated="onPersonUpdated"
+				@status-loaded="onStatusLoaded" />
 		</NcAppContent>
 	</NcContent>
 </template>
 
 <script setup>
-import { mdiAlertCircleOutline } from '@mdi/js'
+import { mdiAlertCircleOutline, mdiCheck } from '@mdi/js'
 import { t } from '@nextcloud/l10n'
 import { computed, onMounted, ref } from 'vue'
 import NcAppContent from '@nextcloud/vue/components/NcAppContent'
@@ -58,6 +64,7 @@ import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import PersonView from './components/PersonView.vue'
 import { api } from './api.js'
+import { attentionOf, summarize } from './attention.js'
 import { createCatalog } from './catalog.js'
 
 const persons = ref([])
@@ -65,6 +72,11 @@ const catalog = ref(null)
 const selectedUserId = ref(null)
 const loading = ref(true)
 const loadError = ref(null)
+
+const personsWithLight = computed(() => persons.value.map((person) => ({
+	...person,
+	light: summarize(person.attention ?? [], catalog.value),
+})))
 
 const selectedPerson = computed(() => persons.value.find((person) => person.userId === selectedUserId.value) ?? null)
 const pageTitle = computed(() => selectedPerson.value
@@ -87,7 +99,12 @@ onMounted(async () => {
 })
 
 function onPersonUpdated(updated) {
-	persons.value = persons.value.map((person) => person.userId === updated.userId ? updated : person)
+	// keep the traffic light until the status has been reloaded
+	persons.value = persons.value.map((person) => person.userId === updated.userId ? { ...person, ...updated } : person)
+}
+
+function onStatusLoaded(userId, rules) {
+	persons.value = persons.value.map((person) => person.userId === userId ? { ...person, attention: attentionOf(rules) } : person)
 }
 </script>
 
@@ -98,8 +115,38 @@ function onPersonUpdated(updated) {
 	padding-top: 20vh;
 }
 
-.vaccinations__self {
-	color: var(--color-text-maxcontrast);
+.vaccinations__light {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	padding: 1px 8px;
+	border-radius: var(--border-radius-pill, 12px);
+	border: 1px solid transparent;
 	font-size: var(--font-size-small, 13px);
+	white-space: nowrap;
+
+	&--error {
+		// NC 32+: --color-error is a light background, the strong colour is --color-element-error
+		background-color: var(--color-element-error, var(--color-error));
+		color: #fff;
+		font-weight: bold;
+	}
+
+	&--warning {
+		background-color: var(--color-element-warning, var(--color-warning));
+		color: #000;
+		font-weight: bold;
+	}
+
+	// outlined like "Complete" in the status table
+	&--ok {
+		border-color: var(--color-success-text, var(--color-success));
+		color: var(--color-success-text, var(--color-success));
+	}
+
+	&--unknown {
+		border: 1px dashed var(--color-text-maxcontrast);
+		color: var(--color-text-maxcontrast);
+	}
 }
 </style>

@@ -8,6 +8,10 @@ OC.L10N.register(
 			"%n Dosis",
 			"%n Dosen"
 		],
+		"_%n due_::_%n due_": [
+			"%n fällig",
+			"%n fällig"
+		],
 		"_%n earlier dose does not count_::_%n earlier doses do not count_": [
 			"%n frühere Dosis zählt nicht",
 			"%n frühere Dosen zählen nicht"
@@ -20,6 +24,14 @@ OC.L10N.register(
 			"%n weitere Empfehlung in späteren Jahren",
 			"%n weitere Empfehlungen in späteren Jahren"
 		],
+		"_%n open_::_%n open_": [
+			"%n offen",
+			"%n offen"
+		],
+		"_%n soon_::_%n soon_": [
+			"%n demnächst",
+			"%n demnächst"
+		],
 		"_%n year ago_::_%n years ago_": [
 			"vor %n Jahr",
 			"vor %n Jahren"
@@ -27,6 +39,7 @@ OC.L10N.register(
 		"Actions": "Aktionen",
 		"Add the entries from the vaccination card, starting with the most recent ones.": "Trage die Einträge aus dem Impfpass ein – am besten mit den neuesten beginnen.",
 		"Add vaccination": "Impfung eintragen",
+		"All vaccinations up to date": "Alle Impfungen aktuell",
 		"Based on: {schedule}, as of {version}. Standard vaccinations only – no substitute for medical advice.": "Grundlage: {schedule}, Stand {version}. Nur Standardimpfungen – ersetzt keine ärztliche Beratung.",
 		"Batch": "Charge",
 		"Batch number (optional)": "Chargennummer (optional)",
@@ -63,6 +76,7 @@ OC.L10N.register(
 		"No vaccinations recorded yet": "Noch keine Impfungen eingetragen",
 		"Not documented": "Nicht dokumentiert",
 		"Note (optional)": "Notiz (optional)",
+		"OK": "OK",
 		"Overdue": "Überfällig",
 		"People": "Personen",
 		"Please choose a vaccine from the list.": "Bitte einen Impfstoff aus der Liste wählen.",
@@ -87,8 +101,8 @@ OC.L10N.register(
 		"Vaccinations": "Impfungen",
 		"Vaccine": "Impfstoff",
 		"Vaccine missing? It can be added to the list via a pull request on GitHub.": "Impfstoff fehlt? Er kann per Pull-Request auf GitHub ergänzt werden.",
-		"You": "Du",
 		"{dose} from {date}": "{dose} ab {date}",
+		"{name} (you)": "{name} (Du)",
 		"{vaccine} from {date} will be removed.": "{vaccine} vom {date} wird entfernt."
 	},
 	"nplurals=2; plural=(n != 1);"

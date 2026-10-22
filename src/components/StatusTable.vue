@@ -104,6 +104,7 @@
 import { getLanguage, n, t } from '@nextcloud/l10n'
 import { computed } from 'vue'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import { ruleName } from '../attention.js'
 import { formatDate, fromIsoDate, toIsoDate } from '../dates.js'
 
 const props = defineProps({
@@ -127,7 +128,7 @@ const missingBirthDate = computed(() => props.status.rules.some((rule) => rule.s
 const allRows = computed(() => props.status.rules
 	// rules without a current recommendation are visible in the history anyway
 	.filter((rule) => rule.status !== 'documented')
-	.map((rule) => ({ ...rule, name: ruleName(rule) }))
+	.map((rule) => ({ ...rule, name: ruleName(rule, props.catalog) }))
 	.sort((a, b) => ORDER.indexOf(a.status) - ORDER.indexOf(b.status)
 		|| (a.next?.dueFrom ?? '9999').localeCompare(b.next?.dueFrom ?? '9999')
 		|| a.name.localeCompare(b.name)))
@@ -184,11 +185,6 @@ function timeSince(isoDate) {
 		return n('vaccinations', '%n month ago', '%n months ago', months)
 	}
 	return n('vaccinations', '%n year ago', '%n years ago', Math.floor(months / 12))
-}
-
-function ruleName(rule) {
-	const language = getLanguage().split(/[-_]/)[0]
-	return rule.names?.[language] ?? rule.names?.en ?? rule.diseaseIds.map(props.catalog.diseaseName).join(', ')
 }
 
 function statusLabel(status) {
@@ -268,12 +264,13 @@ function nextText(row) {
 		color: var(--color-main-text);
 
 		&--overdue {
-			background-color: var(--color-error);
+			// NC 32+: --color-error is a light background, the strong colour is --color-element-error
+		background-color: var(--color-element-error, var(--color-error));
 			color: #fff;
 		}
 
 		&--due {
-			background-color: var(--color-warning);
+			background-color: var(--color-element-warning, var(--color-warning));
 			color: #000;
 		}
 

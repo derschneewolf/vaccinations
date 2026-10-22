@@ -148,7 +148,7 @@ const props = defineProps({
 	person: { type: Object, required: true },
 	catalog: { type: Object, required: true },
 })
-const emit = defineEmits(['person-updated'])
+const emit = defineEmits(['person-updated', 'status-loaded'])
 
 const records = ref([])
 const status = ref(null)
@@ -172,6 +172,8 @@ onMounted(async () => {
 async function loadStatus() {
 	try {
 		status.value = await api.status(props.person.userId)
+		// keeps the traffic light in the person list current
+		emit('status-loaded', props.person.userId, status.value.rules)
 	} catch (error) {
 		showError(t('vaccinations', 'Could not load the vaccination status: {message}', { message: error.message }))
 	}

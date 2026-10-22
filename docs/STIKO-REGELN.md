@@ -66,7 +66,7 @@ Ab welchem Alter alle 3 Jahre aufgefrischt wird, hängt vom Impfstoff ab (Encepu
 | Überfällig | Dosis fällig und Frist (Alter bzw. Abstand) überschritten |
 | Fällig | Dosis jetzt empfohlen |
 | Nicht dokumentiert | Empfehlung gilt, aber **keine** passende Impfung eingetragen – vermutlich Impfpass nicht vollständig erfasst |
-| Demnächst | nächste Dosis innerhalb von 90 Tagen |
+| Demnächst | nächste Dosis innerhalb von 60 Tagen |
 | Aktuell / Vollständig | nichts fällig; ggf. Datum der nächsten Auffrischung |
 
 - Eine teilweise dokumentierte Serie gilt als echte Lücke (fällig/überfällig), eine komplett leere als „nicht dokumentiert“.

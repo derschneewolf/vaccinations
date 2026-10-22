@@ -39,7 +39,7 @@ sourceStrings.add('Vaccinations') // navigation entry in appinfo/info.xml
 
 // de = informal (Du), de_DE = formal (Sie) in Nextcloud; same texts apart from the address
 const formal = {
-	'Du': 'Sie',
+	'{name} (Du)': '{name} (Sie)',
 	'Trage die Einträge aus dem Impfpass ein – am besten mit den neuesten beginnen.': 'Tragen Sie die Einträge aus dem Impfpass ein – am besten mit den neuesten beginnen.',
 	'Gib das Geburtsdatum ein, damit die Impfungen mit dem Impfkalender abgeglichen werden können.': 'Geben Sie das Geburtsdatum ein, damit die Impfungen mit dem Impfkalender abgeglichen werden können.',
 }

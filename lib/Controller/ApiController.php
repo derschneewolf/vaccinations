@@ -58,13 +58,17 @@ class ApiController extends OCSController {
 	}
 
 	/**
-	 * People the current user may manage: self first, then wards (admins: everyone).
+	 * People the current user may manage: self first, then wards (admins: everyone),
+	 * each with the rules that need attention (traffic light in the person list).
 	 * @return ApiResult
 	 */
 	#[NoAdminRequired]
 	#[ApiRoute(verb: 'GET', url: '/api/v1/persons')]
 	public function persons(): DataResponse {
-		return new DataResponse($this->personService->listManageable($this->actorUid()));
+		return new DataResponse(array_map(
+			fn (array $person): array => [...$person, 'attention' => $this->statusService->attention($person['userId'])],
+			$this->personService->listManageable($this->actorUid()),
+		));
 	}
 
 	/**

@@ -18,6 +18,14 @@ use OCP\AppFramework\Utility\ITimeFactory;
  * Vaccination status of one person against their selected schedule.
  */
 class StatusService {
+	private const ATTENTION = [
+		RuleStatus::OVERDUE,
+		RuleStatus::NOT_DOCUMENTED,
+		RuleStatus::DUE,
+		RuleStatus::UPCOMING,
+		RuleStatus::MISSING_BIRTH_DATE,
+	];
+
 	public function __construct(
 		private readonly PersonService $personService,
 		private readonly PersonMapper $personMapper,
@@ -43,6 +51,20 @@ class StatusService {
 				static fn (RuleStatus $status): bool => $status->status !== RuleStatus::NOT_APPLICABLE,
 			)),
 		];
+	}
+
+	/**
+	 * Rules that need attention, for the traffic light in the person list:
+	 * overdue, not documented, due, coming up soon or no date of birth.
+	 * Without permission check – the caller lists only manageable persons.
+	 *
+	 * @return list<RuleStatus>
+	 */
+	public function attention(string $userId): array {
+		return array_values(array_filter(
+			$this->evaluate($userId)['rules'],
+			static fn (RuleStatus $status): bool => in_array($status->status, self::ATTENTION, true),
+		));
 	}
 
 	/**

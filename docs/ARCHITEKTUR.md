@@ -38,7 +38,7 @@ Basis: `/ocs/v2.php/apps/vaccinations/api/v1`, Header `OCS-APIRequest: true`.
 | Methode | Pfad | Zweck |
 |---|---|---|
 | GET | `/catalog` | Krankheiten, Impfstoffe und Impfschemata |
-| GET | `/persons` | pflegbare Personen (selbst zuerst; Admin: alle) |
+| GET | `/persons` | pflegbare Personen (selbst zuerst; Admin: alle), je mit `attention`: Regeln mit Status überfällig, nicht dokumentiert, fällig, demnächst oder fehlendem Geburtsdatum – für die Ampel |
 | PUT | `/persons/{userId}` | Einstellungen ändern – nur mitgeschickte Felder: `birthDate` (`null` löscht), `scheduleId` |
 | GET | `/persons/{userId}/records` | Impfungen einer Person |
 | GET | `/persons/{userId}/status` | Impfstatus gegen den Impfkalender |
@@ -48,10 +48,21 @@ Basis: `/ocs/v2.php/apps/vaccinations/api/v1`, Header `OCS-APIRequest: true`.
 
 Fehler: 400 `{field, message}`, 403 bei fremden Personen, 404 bei fremden oder unbekannten Einträgen (Existenz wird nicht verraten).
 
+## Ampel in der Personenliste
+
+| Farbe | Bedingung | Badge |
+|---|---|---|
+| Rot | mindestens eine Impfung überfällig oder nicht dokumentiert | „2 offen“ |
+| Gelb | sonst: etwas fällig oder demnächst (≤ 60 Tage) | „1 fällig“ / „1 demnächst“ |
+| Grün | alles aktuell oder vollständig | „OK“ |
+| Grau | Geburtsdatum fehlt | „Geburtsdatum fehlt“ |
+
+„Nicht dokumentiert“ zählt bewusst als rot: Die Impfung muss entweder nachgetragen oder nachgeholt werden. Der Tooltip listet die betroffenen Impfungen. Nach jeder Änderung meldet `PersonView` den neuen Status an die Liste (`status-loaded`), die Ampel ist also ohne Neuladen aktuell.
+
 ## Benachrichtigungen
 
 - Täglicher Job `OCA\Vaccinations\BackgroundJob\DailyCheck` prüft alle Personen mit mindestens einer eingetragenen Impfung.
-- Gemeldet werden **demnächst** (≤ 90 Tage), **fällig** und **überfällig** – jede Stufe pro Dosis genau einmal (Tabelle `vacc_notified`). „Nicht dokumentiert“ wird nie gemeldet.
+- Gemeldet werden **demnächst** (≤ 60 Tage), **fällig** und **überfällig** – jede Stufe pro Dosis genau einmal (Tabelle `vacc_notified`). „Nicht dokumentiert“ wird nie gemeldet.
 - Empfänger: die Betreuer der Person; ohne Betreuer die Person selbst.
 - Ist nichts mehr offen (z. B. Impfung eingetragen), wird die Benachrichtigung entfernt.
 - Zustand und Benachrichtigung werden in einer Transaktion geschrieben: schlägt die Zustellung fehl, wird beim nächsten Lauf erneut versucht.

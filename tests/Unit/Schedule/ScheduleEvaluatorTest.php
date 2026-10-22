@@ -58,8 +58,8 @@ class ScheduleEvaluatorTest extends TestCase {
 		$result = $this->evaluate('2026-01-01', [['infanrix-hexa', '2026-03-01'], ['infanrix-hexa', '2026-07-01']]);
 
 		$this->assertSame('2027-01-01', $this->due($result['td']));
-		// 71 days ahead: within the 90-day window
-		$this->assertStatus(RuleStatus::UPCOMING, $result['td']);
+		// 71 days ahead: outside the 60-day window
+		$this->assertStatus(RuleStatus::PLANNED, $result['td']);
 	}
 
 	public function testPartialSeriesIsOverdue(): void {
@@ -255,7 +255,7 @@ class ScheduleEvaluatorTest extends TestCase {
 	}
 
 	public function testInfluenzaIsUpcomingBeforeSeason(): void {
-		$result = $this->evaluate('1950-01-01', [['efluelda', '2025-10-01']], '2026-06-15');
+		$result = $this->evaluate('1950-01-01', [['efluelda', '2025-10-01']], '2026-07-15');
 
 		$this->assertStatus(RuleStatus::UPCOMING, $result['influenza']);
 		$this->assertSame('2026-09-01', $this->due($result['influenza']));
