@@ -5,8 +5,20 @@ export function toIsoDate(date) {
 	if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
 		return null
 	}
-	const pad = (value) => String(value).padStart(2, '0')
-	return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+	const pad = (value, length = 2) => String(value).padStart(length, '0')
+	return `${pad(date.getFullYear(), 4)}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
+/**
+ * True for a complete, plausible past date. Native date inputs report
+ * intermediate values while the year is being typed (year 1, 19, 198 …),
+ * which must not be saved.
+ */
+export function isPlausiblePastDate(date) {
+	return date instanceof Date
+		&& !Number.isNaN(date.getTime())
+		&& date.getFullYear() >= 1900
+		&& date <= new Date()
 }
 
 /** 'YYYY-MM-DD' → Date object at local midnight, or null. */

@@ -139,7 +139,7 @@
 import { mdiDelete, mdiNeedle, mdiPencil, mdiPlus } from '@mdi/js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -150,7 +150,7 @@ import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import RecordDialog from './RecordDialog.vue'
 import { api } from '../api.js'
-import { formatDate, fromIsoDate, toIsoDate } from '../dates.js'
+import { formatDate, fromIsoDate, isPlausiblePastDate, toIsoDate } from '../dates.js'
 
 const props = defineProps({
 	person: { type: Object, required: true },
@@ -229,8 +229,19 @@ async function deleteRecord() {
 	}
 }
 
-async function saveBirthDate(date) {
-	const birthDate = toIsoDate(date)
+// saved shortly after typing stops, and only for complete dates (or when cleared)
+let birthDateTimer = null
+onBeforeUnmount(() => clearTimeout(birthDateTimer))
+
+function saveBirthDate(date) {
+	clearTimeout(birthDateTimer)
+	if (date !== null && !isPlausiblePastDate(date)) {
+		return
+	}
+	birthDateTimer = setTimeout(() => storeBirthDate(date === null ? null : toIsoDate(date)), 700)
+}
+
+async function storeBirthDate(birthDate) {
 	if (birthDate === props.person.birthDate) {
 		return
 	}
