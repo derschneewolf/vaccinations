@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OCA\Vaccinations\Service;
 
+use OCA\Vaccinations\Catalog\Catalog;
 use OCA\Vaccinations\Db\Person;
 use OCA\Vaccinations\Db\PersonMapper;
 use OCA\Vaccinations\Exception\ForbiddenException;
@@ -27,6 +28,7 @@ class PersonService {
 		private readonly IGroupManager $groupManager,
 		private readonly InputValidator $validator,
 		private readonly ITimeFactory $timeFactory,
+		private readonly Catalog $catalog,
 	) {
 	}
 
@@ -57,13 +59,32 @@ class PersonService {
 	}
 
 	/**
+	 * Changes only the settings that are present in $changes, so saving the
+	 * schedule does not touch the date of birth and vice versa.
+	 *
+	 * @param array{birthDate?: mixed, scheduleId?: mixed} $changes
 	 * @return array{userId: string, displayName: string, birthDate: ?string, scheduleId: string, isSelf: bool}
 	 * @throws ForbiddenException|NotFoundException|ValidationException
 	 */
-	public function updateBirthDate(string $actorUid, string $userId, ?string $birthDate): array {
+	public function updatePerson(string $actorUid, string $userId, array $changes): array {
 		$user = $this->requireManageableUser($actorUid, $userId);
 
-		$parsedBirthDate = $birthDate === null || $birthDate === '' ? null : $this->validator->pastDate('birthDate', $birthDate);
+		// validate everything before touching the entity
+		$birthDate = null;
+		if (array_key_exists('birthDate', $changes)) {
+			$value = $changes['birthDate'];
+			if ($value !== null && !is_string($value)) {
+				throw new ValidationException('birthDate', 'Expected a date in the format YYYY-MM-DD');
+			}
+			$birthDate = $value === null || $value === '' ? null : $this->validator->pastDate('birthDate', $value);
+		}
+		if (array_key_exists('scheduleId', $changes)) {
+			$scheduleId = $changes['scheduleId'];
+			if (!is_string($scheduleId) || $this->catalog->getSchedule($scheduleId) === null) {
+				throw new ValidationException('scheduleId', 'Unknown vaccination schedule');
+			}
+		}
+
 		try {
 			$person = $this->personMapper->findByUserId($userId);
 			$isNew = false;
@@ -72,7 +93,12 @@ class PersonService {
 			$person->setUserId($userId);
 			$isNew = true;
 		}
-		$person->setBirthDate($parsedBirthDate);
+		if (array_key_exists('birthDate', $changes)) {
+			$person->setBirthDate($birthDate);
+		}
+		if (isset($scheduleId)) {
+			$person->setScheduleId($scheduleId);
+		}
 		$person->setUpdatedAt($this->timeFactory->now());
 		$person = $isNew ? $this->personMapper->insert($person) : $this->personMapper->update($person);
 

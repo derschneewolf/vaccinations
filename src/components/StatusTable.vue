@@ -1,6 +1,9 @@
 <template>
 	<section class="status">
-		<h3>{{ t('vaccinations', 'Vaccination status') }}</h3>
+		<h3>
+			{{ t('vaccinations', 'Vaccination status') }}
+			<span v-if="schedule" class="status__schedule">– {{ scheduleName }}</span>
+		</h3>
 
 		<NcNoteCard v-if="missingBirthDate" type="info">
 			{{ t('vaccinations', 'Enter the date of birth to check the vaccinations against the schedule.') }}
@@ -45,31 +48,6 @@
 			</ul>
 		</details>
 
-		<template v-if="otherRows.length > 0">
-			<h4 class="status__subheading">
-				{{ t('vaccinations', 'Further vaccinations') }}
-			</h4>
-			<p class="status__hint">
-				{{ t('vaccinations', 'No current standard recommendation – booster as advised by a doctor, e.g. before travelling.') }}
-			</p>
-			<table class="status__table">
-				<thead>
-					<tr>
-						<th>{{ t('vaccinations', 'Vaccination') }}</th>
-						<th>{{ t('vaccinations', 'Documented') }}</th>
-						<th>{{ t('vaccinations', 'Last vaccination') }}</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="row in otherRows" :key="row.key">
-						<td>{{ row.name }}</td>
-						<td>{{ n('vaccinations', '%n dose', '%n doses', row.doses) }}</td>
-						<td>{{ formatDate(row.lastDose) }} ({{ timeSince(row.lastDose) }})</td>
-					</tr>
-				</tbody>
-			</table>
-		</template>
-
 		<details v-if="schedule" class="status__source">
 			<summary>
 				{{ t('vaccinations', 'Based on: {schedule}, as of {version}. Standard vaccinations only – no substitute for medical advice.', {
@@ -90,6 +68,32 @@
 				</template>
 			</p>
 		</details>
+
+		<template v-if="otherRows.length > 0">
+			<h4 class="status__subheading">
+				{{ t('vaccinations', 'Further vaccinations') }}
+			</h4>
+			<p class="status__hint">
+				{{ t('vaccinations', 'No current standard recommendation in the selected schedule – booster as advised by a doctor, e.g. before travelling.') }}
+			</p>
+			<table class="status__table">
+				<thead>
+					<tr>
+						<th>{{ t('vaccinations', 'Vaccination') }}</th>
+						<th>{{ t('vaccinations', 'Documented') }}</th>
+						<th>{{ t('vaccinations', 'Last vaccination') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="row in otherRows" :key="row.key">
+						<td>{{ row.name }}</td>
+						<td>{{ n('vaccinations', '%n dose', '%n doses', row.doses) }}</td>
+						<td>{{ formatDate(row.lastDose) }} ({{ timeSince(row.lastDose) }})</td>
+					</tr>
+				</tbody>
+			</table>
+		</template>
+
 	</section>
 </template>
 
@@ -272,6 +276,11 @@ function nextText(row) {
 			border: 1px solid var(--color-success-text, var(--color-success));
 			color: var(--color-success-text, var(--color-success));
 		}
+	}
+
+	&__schedule {
+		font-weight: normal;
+		color: var(--color-text-maxcontrast);
 	}
 
 	&__subheading {

@@ -11,6 +11,7 @@ use OCA\Vaccinations\Catalog\Vaccine;
 use OCA\Vaccinations\Exception\ForbiddenException;
 use OCA\Vaccinations\Exception\NotFoundException;
 use OCA\Vaccinations\Exception\ValidationException;
+use OCA\Vaccinations\Schedule\Schedule;
 use OCA\Vaccinations\Service\PersonService;
 use OCA\Vaccinations\Service\RecordService;
 use OCA\Vaccinations\Service\StatusService;
@@ -52,6 +53,7 @@ class ApiController extends OCSController {
 		return new DataResponse([
 			'diseases' => array_values(array_map(static fn (Disease $d): array => $d->jsonSerialize(), $this->catalog->getDiseases())),
 			'vaccines' => array_values(array_map(static fn (Vaccine $v): array => $v->jsonSerialize(), $this->catalog->getVaccines())),
+			'schedules' => array_values(array_map(static fn (Schedule $s): array => $s->jsonSerialize(), $this->catalog->getSchedules())),
 		]);
 	}
 
@@ -70,8 +72,10 @@ class ApiController extends OCSController {
 	 */
 	#[NoAdminRequired]
 	#[ApiRoute(verb: 'PUT', url: '/api/v1/persons/{userId}')]
-	public function updatePerson(string $userId, ?string $birthDate = null): DataResponse {
-		return $this->handle(fn (): array => $this->personService->updateBirthDate($this->actorUid(), $userId, $birthDate));
+	public function updatePerson(string $userId): DataResponse {
+		// only the fields sent are changed (birthDate: null clears it)
+		$changes = array_intersect_key($this->request->getParams(), array_flip(['birthDate', 'scheduleId']));
+		return $this->handle(fn (): array => $this->personService->updatePerson($this->actorUid(), $userId, $changes));
 	}
 
 	/**

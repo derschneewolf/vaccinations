@@ -30,7 +30,8 @@ const encode = encodeURIComponent
 export const api = {
 	catalog: () => request('get', '/catalog'),
 	persons: () => request('get', '/persons'),
-	updatePerson: (userId, birthDate) => request('put', `/persons/${encode(userId)}`, { birthDate }),
+	/** changes: { birthDate?, scheduleId? } – only the given fields are changed */
+	updatePerson: (userId, changes) => request('put', `/persons/${encode(userId)}`, changes),
 	records: (userId) => request('get', `/persons/${encode(userId)}/records`),
 	status: (userId) => request('get', `/persons/${encode(userId)}/status`),
 	createRecord: (userId, record) => request('post', `/persons/${encode(userId)}/records`, record),

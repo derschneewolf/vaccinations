@@ -4,7 +4,7 @@
 			<h2 class="person__name">
 				{{ person.displayName }}
 			</h2>
-			<div class="person__birth-date">
+			<div class="person__settings">
 				<NcDateTimePickerNative id="vaccinations-birth-date"
 					:model-value="fromIsoDate(person.birthDate)"
 					type="date"
@@ -14,6 +14,15 @@
 				<p v-if="!person.birthDate" class="person__hint">
 					{{ t('vaccinations', 'Needed to check against the vaccination schedule.') }}
 				</p>
+				<NcSelect class="person__schedule"
+					input-id="vaccinations-schedule"
+					:input-label="t('vaccinations', 'Vaccination schedule')"
+					:options="catalog.schedules"
+					:model-value="catalog.schedules.find((schedule) => schedule.id === person.scheduleId) ?? null"
+					label="label"
+					:clearable="false"
+					:searchable="false"
+					@update:model-value="saveSchedule" />
 			</div>
 			<NcButton variant="primary" @click="openCreate">
 				<template #icon>
@@ -129,6 +138,7 @@ import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import RecordDialog from './RecordDialog.vue'
 import StatusTable from './StatusTable.vue'
 import { api } from '../api.js'
@@ -167,7 +177,7 @@ async function loadStatus() {
 	}
 }
 
-watch(() => props.person.birthDate, loadStatus)
+watch(() => [props.person.birthDate, props.person.scheduleId], loadStatus)
 
 // newest first; same day: most recently entered first
 const sortedRecords = computed(() => [...records.value].sort((a, b) =>
@@ -224,12 +234,23 @@ function saveBirthDate(date) {
 	birthDateTimer = setTimeout(() => storeBirthDate(date === null ? null : toIsoDate(date)), 700)
 }
 
+async function saveSchedule(schedule) {
+	if (!schedule || schedule.id === props.person.scheduleId) {
+		return
+	}
+	try {
+		emit('person-updated', await api.updatePerson(props.person.userId, { scheduleId: schedule.id }))
+	} catch (error) {
+		showError(t('vaccinations', 'Could not save the vaccination schedule: {message}', { message: error.message }))
+	}
+}
+
 async function storeBirthDate(birthDate) {
 	if (birthDate === props.person.birthDate) {
 		return
 	}
 	try {
-		emit('person-updated', await api.updatePerson(props.person.userId, birthDate))
+		emit('person-updated', await api.updatePerson(props.person.userId, { birthDate }))
 	} catch (error) {
 		showError(t('vaccinations', 'Could not save the date of birth: {message}', { message: error.message }))
 	}
@@ -245,7 +266,7 @@ async function storeBirthDate(birthDate) {
 	&__header {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: flex-end;
+		align-items: flex-start;
 		gap: calc(var(--default-grid-baseline) * 4);
 		margin-bottom: calc(var(--default-grid-baseline) * 6);
 	}
@@ -255,15 +276,22 @@ async function storeBirthDate(birthDate) {
 		margin: 0;
 	}
 
-	&__birth-date {
-		flex: 1 1 220px;
-		max-width: 260px;
+	&__settings {
+		flex: 1 1 300px;
+		max-width: 420px;
+		display: flex;
+		flex-direction: column;
+		gap: calc(var(--default-grid-baseline) * 3);
+	}
+
+	&__schedule {
+		width: 100%;
 	}
 
 	&__hint {
 		color: var(--color-text-maxcontrast);
 		font-size: var(--font-size-small, 13px);
-		margin-top: var(--default-grid-baseline);
+		margin-top: calc(var(--default-grid-baseline) * -2);
 	}
 
 	&__center {

@@ -37,9 +37,9 @@ Basis: `/ocs/v2.php/apps/vaccinations/api/v1`, Header `OCS-APIRequest: true`.
 
 | Methode | Pfad | Zweck |
 |---|---|---|
-| GET | `/catalog` | Krankheiten und Impfstoffe |
+| GET | `/catalog` | Krankheiten, Impfstoffe und Impfschemata |
 | GET | `/persons` | pflegbare Personen (selbst zuerst; Admin: alle) |
-| PUT | `/persons/{userId}` | Geburtsdatum setzen (`birthDate`, `null` löscht) |
+| PUT | `/persons/{userId}` | Einstellungen ändern – nur mitgeschickte Felder: `birthDate` (`null` löscht), `scheduleId` |
 | GET | `/persons/{userId}/records` | Impfungen einer Person |
 | GET | `/persons/{userId}/status` | Impfstatus gegen den Impfkalender |
 | POST | `/persons/{userId}/records` | Impfung anlegen |
