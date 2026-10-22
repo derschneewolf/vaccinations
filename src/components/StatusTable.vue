@@ -45,6 +45,31 @@
 			</ul>
 		</details>
 
+		<template v-if="otherRows.length > 0">
+			<h4 class="status__subheading">
+				{{ t('vaccinations', 'Further vaccinations') }}
+			</h4>
+			<p class="status__hint">
+				{{ t('vaccinations', 'No current standard recommendation – booster as advised by a doctor, e.g. before travelling.') }}
+			</p>
+			<table class="status__table">
+				<thead>
+					<tr>
+						<th>{{ t('vaccinations', 'Vaccination') }}</th>
+						<th>{{ t('vaccinations', 'Documented') }}</th>
+						<th>{{ t('vaccinations', 'Last vaccination') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="row in otherRows" :key="row.key">
+						<td>{{ row.name }}</td>
+						<td>{{ n('vaccinations', '%n dose', '%n doses', row.doses) }}</td>
+						<td>{{ formatDate(row.lastDose) }} ({{ timeSince(row.lastDose) }})</td>
+					</tr>
+				</tbody>
+			</table>
+		</template>
+
 		<details v-if="schedule" class="status__source">
 			<summary>
 				{{ t('vaccinations', 'Based on: {schedule}, as of {version}. Standard vaccinations only – no substitute for medical advice.', {
@@ -78,6 +103,8 @@ const props = defineProps({
 	/** { schedule, rules } from the status API */
 	status: { type: Object, required: true },
 	catalog: { type: Object, required: true },
+	/** documented doses, for vaccinations without a standard recommendation */
+	records: { type: Array, default: () => [] },
 })
 
 // most urgent first
@@ -107,6 +134,47 @@ const laterThreshold = (() => {
 const isLater = (row) => row.status === 'planned' && row.dosesCounted === 0 && (row.next?.dueFrom ?? '') > laterThreshold
 const rows = computed(() => allRows.value.filter((row) => !isLater(row)))
 const laterRows = computed(() => allRows.value.filter(isLater))
+
+// diseases with documented doses that the status table above does not cover
+// (e.g. typhoid, hepatitis A, polio in adults); identical histories share a row
+const otherRows = computed(() => {
+	const covered = new Set(rows.value.flatMap((row) => row.diseaseIds))
+	const datesByDisease = new Map()
+	for (const record of props.records) {
+		for (const diseaseId of props.catalog.vaccine(record.vaccineId)?.diseaseIds ?? []) {
+			if (!covered.has(diseaseId)) {
+				datesByDisease.set(diseaseId, new Set([...(datesByDisease.get(diseaseId) ?? []), record.administeredOn]))
+			}
+		}
+	}
+	const groups = new Map()
+	for (const [diseaseId, dates] of datesByDisease) {
+		const sorted = [...dates].sort()
+		const key = sorted.join('|')
+		groups.set(key, { key, dates: sorted, diseaseIds: [...(groups.get(key)?.diseaseIds ?? []), diseaseId] })
+	}
+	return [...groups.values()]
+		.map((group) => ({
+			key: group.key,
+			name: group.diseaseIds.map(props.catalog.diseaseName).join(', '),
+			doses: group.dates.length,
+			lastDose: group.dates.at(-1),
+		}))
+		.sort((a, b) => a.name.localeCompare(b.name))
+})
+
+function timeSince(isoDate) {
+	const date = fromIsoDate(isoDate)
+	const now = new Date()
+	const months = (now.getFullYear() - date.getFullYear()) * 12 + now.getMonth() - date.getMonth() - (now.getDate() < date.getDate() ? 1 : 0)
+	if (months < 1) {
+		return t('vaccinations', 'less than a month ago')
+	}
+	if (months < 24) {
+		return n('vaccinations', '%n month ago', '%n months ago', months)
+	}
+	return n('vaccinations', '%n year ago', '%n years ago', Math.floor(months / 12))
+}
 
 function ruleName(rule) {
 	const language = getLanguage().split(/[-_]/)[0]
@@ -204,6 +272,17 @@ function nextText(row) {
 			border: 1px solid var(--color-success-text, var(--color-success));
 			color: var(--color-success-text, var(--color-success));
 		}
+	}
+
+	&__subheading {
+		margin-top: calc(var(--default-grid-baseline) * 6);
+		margin-bottom: 0;
+	}
+
+	&__hint {
+		color: var(--color-text-maxcontrast);
+		font-size: var(--font-size-small, 13px);
+		margin-bottom: calc(var(--default-grid-baseline) * 2);
 	}
 
 	&__later {

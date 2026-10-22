@@ -23,7 +23,10 @@
 			</NcButton>
 		</header>
 
-		<StatusTable v-if="status && catalog" :status="status" :catalog="catalog" />
+		<StatusTable v-if="status && catalog"
+			:status="status"
+			:catalog="catalog"
+			:records="records" />
 
 		<div v-if="loading" class="person__center">
 			<NcLoadingIcon :size="32" />

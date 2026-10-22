@@ -8,9 +8,17 @@ OC.L10N.register(
 			"%n Dosis",
 			"%n Dosen"
 		],
+		"_%n month ago_::_%n months ago_": [
+			"vor %n Monat",
+			"vor %n Monaten"
+		],
 		"_%n more recommendation in later years_::_%n more recommendations in later years_": [
 			"%n weitere Empfehlung in späteren Jahren",
 			"%n weitere Empfehlungen in späteren Jahren"
+		],
+		"_%n year ago_::_%n years ago_": [
+			"vor %n Jahr",
+			"vor %n Jahren"
 		],
 		"Actions": "Aktionen",
 		"Add the entries from the vaccination card, starting with the most recent ones.": "Trage die Einträge aus dem Impfpass ein – am besten mit den neuesten beginnen.",
@@ -38,10 +46,14 @@ OC.L10N.register(
 		"Edit vaccination": "Impfung bearbeiten",
 		"Enter the date of birth to check the vaccinations against the schedule.": "Gib das Geburtsdatum ein, damit die Impfungen mit dem Impfkalender abgeglichen werden können.",
 		"from {date}": "ab {date}",
+		"Further vaccinations": "Weitere Impfungen",
+		"Last vaccination": "Letzte Impfung",
 		"last {date}": "zuletzt {date}",
+		"less than a month ago": "vor weniger als einem Monat",
 		"Needed to check against the vaccination schedule.": "Wird für den Abgleich mit dem Impfkalender benötigt.",
 		"Next": "Nächste",
 		"next from {date}": "nächste ab {date}",
+		"No current standard recommendation – booster as advised by a doctor, e.g. before travelling.": "Aktuell keine STIKO-Standardempfehlung – Auffrischung nach ärztlicher Einschätzung, z. B. vor Reisen.",
 		"No vaccinations recorded yet": "Noch keine Impfungen eingetragen",
 		"Not documented": "Nicht dokumentiert",
 		"Note (optional)": "Notiz (optional)",
