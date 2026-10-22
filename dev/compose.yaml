@@ -66,6 +66,10 @@ services:
     restart: unless-stopped
     working_dir: /app
     command: sh -c "npm ci --no-audit --no-fund && npm run watch"
+    environment:
+      # file change events do not reliably reach containers on Synology bind mounts – poll instead
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "2000"
     volumes:
       - ../:/app
 

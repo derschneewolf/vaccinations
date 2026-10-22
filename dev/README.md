@@ -54,6 +54,12 @@ Beide Test-User haben das Passwort `DEV_USER_PASSWORD`. Außerdem: Debug-Modus, 
 sudo docker exec vaccinations-dev-app-1 chown www-data:www-data /var/www/html/custom_apps
 ```
 
+**Oberfläche zeigt nach `git pull` noch den alten Stand:** Der `frontend`-Container hat die Änderung nicht mitbekommen. Neu bauen lassen:
+```sh
+sudo docker restart vaccinations-dev-frontend-1
+sudo docker logs -f vaccinations-dev-frontend-1   # warten auf „built in …“, dann Strg+C
+```
+
 ## Im Alltag
 
 **Neuen Stand holen:**
