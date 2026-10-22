@@ -217,13 +217,19 @@ function nextText(row) {
 			? t('vaccinations', 'recommended')
 			: t('vaccinations', 'recommended since {date}', { date })
 	}
-	// labels like "RSV" for the RSV rule add nothing
-	if (row.next.label && row.next.label.toLowerCase() !== row.name.toLowerCase()) {
-		return t('vaccinations', '{dose} from {date}', { dose: row.next.label, date })
+	switch (row.next.type) {
+	case 'dose':
+		return t('vaccinations', 'Dose {number} from {date}', { number: row.next.doseNumber, date })
+	case 'booster':
+		return t('vaccinations', 'Booster from {date}', { date })
+	case 'season':
+		return t('vaccinations', 'Season from {date}', { date })
+	default:
+		// a named vaccination (Tdap, MenACWY …); a label equal to the row name ("RSV") adds nothing
+		return row.next.label && row.next.label.toLowerCase() !== row.name.toLowerCase()
+			? t('vaccinations', '{dose} from {date}', { dose: row.next.label, date })
+			: t('vaccinations', 'from {date}', { date })
 	}
-	return row.dosesCounted > 0
-		? t('vaccinations', 'next from {date}', { date })
-		: t('vaccinations', 'from {date}', { date })
 }
 </script>
 

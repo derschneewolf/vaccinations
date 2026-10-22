@@ -309,6 +309,7 @@ class ScheduleEvaluator {
 			reference: $rule->reference,
 			names: $rule->names,
 			dosesIgnored: $ignored,
+			ruleKind: $rule->kind,
 		);
 	}
 }

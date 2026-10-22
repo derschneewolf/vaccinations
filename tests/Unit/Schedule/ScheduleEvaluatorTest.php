@@ -324,6 +324,26 @@ class ScheduleEvaluatorTest extends TestCase {
 		$this->assertSame('2027-05-01', $this->due($result['tbe']));
 	}
 
+	// ---- next dose description --------------------------------------------
+
+	public function testNextTypeForUi(): void {
+		$result = $this->evaluate('2026-07-01', [['infanrix-hexa', '2026-09-01']]);
+		$this->assertSame(['type' => 'dose', 'doseNumber' => 2], $result['td']->nextType());
+
+		$result = $this->evaluate('2018-03-01', [['infanrix-hexa', '2018-05-01'], ['infanrix-hexa', '2018-07-01'], ['infanrix-hexa', '2019-02-01'], ['boostrix', '2023-06-01']]);
+		$this->assertSame('booster', $result['td']->nextType()['type'], 'A2');
+
+		$result = $this->evaluate('1980-02-29', [['boostrix', '2021-09-16']]);
+		$this->assertSame('booster', $result['td']->nextType()['type'], 'periodic');
+
+		$result = $this->evaluate('1950-01-01', [['efluelda', '2025-10-10']]);
+		$this->assertSame('season', $result['influenza']->nextType()['type']);
+
+		$result = $this->evaluate('1975-05-05', [['td-pur', '2020-04-01']]);
+		$this->assertSame('named', $result['pertussis-adult']->nextType()['type'], 'Tdap');
+		$this->assertSame('Tdap', $result['pertussis-adult']->jsonSerialize()['next']['label']);
+	}
+
 	// ---- general ----------------------------------------------------------
 
 	public function testMissingBirthDate(): void {
