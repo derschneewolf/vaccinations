@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "typhim-vi",
+  "name": "Typhim Vi",
+  "aliases": [
+    "Typhus"
+  ],
+  "manufacturer": "Sanofi",
+  "diseases": [
+    "typhoid"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

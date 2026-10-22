@@ -24,6 +24,7 @@
     {"id": "tbe", "name": {"de": "FSME", "en": "Tick-borne encephalitis"}},
     {"id": "meningococcal-a", "name": {"de": "Meningokokken A", "en": "Meningococcal A"}},
     {"id": "meningococcal-w", "name": {"de": "Meningokokken W", "en": "Meningococcal W"}},
-    {"id": "meningococcal-y", "name": {"de": "Meningokokken Y", "en": "Meningococcal Y"}}
+    {"id": "meningococcal-y", "name": {"de": "Meningokokken Y", "en": "Meningococcal Y"}},
+    {"id": "typhoid", "name": {"de": "Typhus", "en": "Typhoid fever"}}
   ]
 }
