@@ -34,7 +34,23 @@ class StatusService {
 	 */
 	public function forPerson(string $actorUid, string $userId): array {
 		$this->personService->requireManageableUser($actorUid, $userId);
+		$result = $this->evaluate($userId);
+		return [
+			'schedule' => $result['schedule'],
+			// recommendations that do not apply are of no interest in the UI
+			'rules' => array_values(array_filter(
+				$result['rules'],
+				static fn (RuleStatus $status): bool => $status->status !== RuleStatus::NOT_APPLICABLE,
+			)),
+		];
+	}
 
+	/**
+	 * Without permission check – for background jobs.
+	 *
+	 * @return array{schedule: ?\OCA\Vaccinations\Schedule\Schedule, rules: list<RuleStatus>}
+	 */
+	public function evaluate(string $userId): array {
 		$person = $this->personMapper->findOrNew($userId);
 		$schedule = $this->catalog->getSchedule($person->getScheduleId());
 		if ($schedule === null) {
@@ -47,13 +63,6 @@ class StatusService {
 		);
 		$statuses = $this->evaluator->evaluate($schedule, $person->getBirthDate(), $doses, $this->timeFactory->now());
 
-		return [
-			'schedule' => $schedule,
-			// recommendations that do not apply are of no interest in the UI
-			'rules' => array_values(array_filter(
-				$statuses,
-				static fn (RuleStatus $status): bool => $status->status !== RuleStatus::NOT_APPLICABLE,
-			)),
-		];
+		return ['schedule' => $schedule, 'rules' => $statuses];
 	}
 }

@@ -1,6 +1,9 @@
 OC.L10N.register(
 	"vaccinations",
 	{
+		"%1$s: %2$s is coming up (from %3$s)": "%1$s: %2$s steht demnächst an (ab %3$s)",
+		"%1$s: %2$s is due (since %3$s)": "%1$s: %2$s ist fällig (seit %3$s)",
+		"%1$s: %2$s is overdue (due since %3$s)": "%1$s: %2$s ist überfällig (fällig seit %3$s)",
 		"_%n dose_::_%n doses_": [
 			"%n Dosis",
 			"%n Dosen"

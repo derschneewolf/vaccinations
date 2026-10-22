@@ -48,6 +48,15 @@ Basis: `/ocs/v2.php/apps/vaccinations/api/v1`, Header `OCS-APIRequest: true`.
 
 Fehler: 400 `{field, message}`, 403 bei fremden Personen, 404 bei fremden oder unbekannten Einträgen (Existenz wird nicht verraten).
 
+## Benachrichtigungen
+
+- Täglicher Job `OCA\Vaccinations\BackgroundJob\DailyCheck` prüft alle Personen mit mindestens einer eingetragenen Impfung.
+- Gemeldet werden **demnächst** (≤ 90 Tage), **fällig** und **überfällig** – jede Stufe pro Dosis genau einmal (Tabelle `vacc_notified`). „Nicht dokumentiert“ wird nie gemeldet.
+- Empfänger: die Betreuer der Person; ohne Betreuer die Person selbst.
+- Ist nichts mehr offen (z. B. Impfung eingetragen), wird die Benachrichtigung entfernt.
+- Zustand und Benachrichtigung werden in einer Transaktion geschrieben: schlägt die Zustellung fehl, wird beim nächsten Lauf erneut versucht.
+- Der Link öffnet die App direkt bei der Person (`?person=<uid>`).
+
 ## Berechtigungen
 
 `PermissionService::canManage(actor, person)`: selbst ODER Admin ODER Betreuer.
@@ -98,5 +107,5 @@ Indikations-, Berufs- und Reiseimpfungen sind noch nicht enthalten.
 2b. ✅ Entwicklungsinstanz auf der DiskStation (`dev/`), `occ vaccinations:guardian:*`, Migration gegen PostgreSQL + NC 35 bestätigt
 3. ✅ OCS-API + Vue-Frontend (Vue 3, @nextcloud/vue 9): Personenliste, Geburtsdatum, Schutz nach Krankheit, Impfhistorie, Erfassen/Bearbeiten/Löschen mit Impfstoff-Suche (auch nach Krankheit), Deutsch (Du/Sie)
 4. ✅ Regel-Engine + STIKO-Kalender 2026 (Standardimpfungen aller Altersgruppen), 64 Impfstoffe im Katalog, Statusanzeige mit Fälligkeiten
-5. Übersicht fällig/überfällig, Notifications via Background-Job
+5. ✅ Benachrichtigungen: täglicher Hintergrundjob `DailyCheck`, `occ vaccinations:notify [user]`
 6. App-Store-Release

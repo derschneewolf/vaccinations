@@ -78,6 +78,8 @@ sudo docker exec -u www-data vaccinations-dev-app-1 php occ vaccinations:guardia
 
 Betreuer-Befehle: `vaccinations:guardian:add <betreuer> <person>`, `:remove`, `:list`.
 
+Benachrichtigungen sofort prüfen statt auf den täglichen Hintergrundjob zu warten: `vaccinations:notify` (optional mit User-ID).
+
 ## Neu aufsetzen / andere Nextcloud-Version
 
 Per SSH Container **und** Volumes (Datenbank, Nextcloud-Daten) löschen:

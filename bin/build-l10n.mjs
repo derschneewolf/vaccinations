@@ -13,6 +13,11 @@ function collectSourceStrings(dir, found = new Set()) {
 		const path = join(dir, entry.name)
 		if (entry.isDirectory()) {
 			collectSourceStrings(path, found)
+		} else if (/\.php$/.test(entry.name)) {
+			// backend: $l->t('...') in notifications etc.
+			for (const match of readFileSync(path, 'utf8').matchAll(/->t\('((?:[^'\\]|\\.)*)'/g)) {
+				found.add(match[1].replace(/\\'/g, "'"))
+			}
 		} else if (/\.(vue|js)$/.test(entry.name)) {
 			const source = readFileSync(path, 'utf8')
 			const unescape = (text) => text.replace(/\\'/g, "'")
@@ -29,6 +34,7 @@ function collectSourceStrings(dir, found = new Set()) {
 }
 
 const sourceStrings = collectSourceStrings(join(root, 'src'))
+collectSourceStrings(join(root, 'lib'), sourceStrings)
 sourceStrings.add('Vaccinations') // navigation entry in appinfo/info.xml
 
 // de = informal (Du), de_DE = formal (Sie) in Nextcloud; same texts apart from the address

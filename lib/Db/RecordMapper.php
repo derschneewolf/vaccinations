@@ -43,6 +43,22 @@ class RecordMapper extends QBMapper {
 		return $this->findEntities($qb);
 	}
 
+	/**
+	 * Everyone with at least one documented dose.
+	 *
+	 * @return list<string>
+	 */
+	public function findUserIdsWithRecords(): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->selectDistinct('user_id')->from($this->getTableName());
+		$result = $qb->executeQuery();
+		try {
+			return array_map('strval', $result->fetchFirstColumn());
+		} finally {
+			$result->closeCursor();
+		}
+	}
+
 	public function deleteByUserId(string $userId): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->delete($this->getTableName())

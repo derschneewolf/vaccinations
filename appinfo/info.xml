@@ -7,7 +7,7 @@
     <description><![CDATA[Record vaccinations (date, vaccine, optional practice) for every user and check them against a selectable vaccination schedule (initially the German STIKO schedule). Shows overdue and upcoming vaccinations.
 
 The vaccine-to-disease mapping is maintained as open data in the repository and can be extended via pull request.]]></description>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
     <licence>agpl</licence>
     <author>Frank</author>
     <namespace>Vaccinations</namespace>
@@ -20,10 +20,14 @@ The vaccine-to-disease mapping is maintained as open data in the repository and 
         <!-- only currently supported majors; raise min-version when a major reaches EOL (NC 33: 2027-02) -->
         <nextcloud min-version="33" max-version="35"/>
     </dependencies>
+    <background-jobs>
+        <job>OCA\Vaccinations\BackgroundJob\DailyCheck</job>
+    </background-jobs>
     <commands>
         <command>OCA\Vaccinations\Command\GuardianAdd</command>
         <command>OCA\Vaccinations\Command\GuardianList</command>
         <command>OCA\Vaccinations\Command\GuardianRemove</command>
+        <command>OCA\Vaccinations\Command\Notify</command>
     </commands>
     <navigations>
         <navigation>

@@ -76,7 +76,9 @@ onMounted(async () => {
 		const [catalogData, personList] = await Promise.all([api.catalog(), api.persons()])
 		catalog.value = createCatalog(catalogData)
 		persons.value = personList
-		selectedUserId.value = personList[0]?.userId ?? null
+		// notifications link to ?person=<uid>
+		const requested = new URLSearchParams(window.location.search).get('person')
+		selectedUserId.value = personList.find((person) => person.userId === requested)?.userId ?? personList[0]?.userId ?? null
 	} catch (error) {
 		loadError.value = error.message
 	} finally {

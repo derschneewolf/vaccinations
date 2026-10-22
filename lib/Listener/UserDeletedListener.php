@@ -7,6 +7,7 @@ namespace OCA\Vaccinations\Listener;
 use OCA\Vaccinations\Db\GuardianMapper;
 use OCA\Vaccinations\Db\PersonMapper;
 use OCA\Vaccinations\Db\RecordMapper;
+use OCA\Vaccinations\Service\NotificationService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\User\Events\UserDeletedEvent;
@@ -21,6 +22,7 @@ class UserDeletedListener implements IEventListener {
 		private readonly PersonMapper $personMapper,
 		private readonly RecordMapper $recordMapper,
 		private readonly GuardianMapper $guardianMapper,
+		private readonly NotificationService $notificationService,
 	) {
 	}
 
@@ -29,6 +31,7 @@ class UserDeletedListener implements IEventListener {
 			return;
 		}
 		$userId = $event->getUser()->getUID();
+		$this->notificationService->retractAll($userId);
 		$this->recordMapper->deleteByUserId($userId);
 		$this->personMapper->deleteByUserId($userId);
 		$this->guardianMapper->deleteByUserId($userId);

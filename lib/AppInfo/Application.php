@@ -6,6 +6,7 @@ namespace OCA\Vaccinations\AppInfo;
 
 use OCA\Vaccinations\Catalog\Catalog;
 use OCA\Vaccinations\Listener\UserDeletedListener;
+use OCA\Vaccinations\Notification\Notifier;
 use OCP\App\IAppManager;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
@@ -27,6 +28,7 @@ class Application extends App implements IBootstrap {
 			return new Catalog($appPath . '/data');
 		});
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
+		$context->registerNotifierService(Notifier::class);
 	}
 
 	public function boot(IBootContext $context): void {

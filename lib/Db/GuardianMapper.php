@@ -49,6 +49,23 @@ class GuardianMapper extends QBMapper {
 	}
 
 	/**
+	 * @return list<string>
+	 */
+	public function findGuardianUids(string $wardUid): array {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('guardian_uid')
+			->from($this->getTableName())
+			->where($qb->expr()->eq('ward_uid', $qb->createNamedParameter($wardUid, IQueryBuilder::PARAM_STR)))
+			->orderBy('guardian_uid', 'ASC');
+		$result = $qb->executeQuery();
+		try {
+			return array_map('strval', $result->fetchFirstColumn());
+		} finally {
+			$result->closeCursor();
+		}
+	}
+
+	/**
 	 * @return list<Guardian>
 	 */
 	public function findAll(): array {
