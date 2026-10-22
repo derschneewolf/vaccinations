@@ -1,0 +1,41 @@
+name: Release
+
+# Push a tag like v0.4.0 (matching <version> in appinfo/info.xml) to publish
+# a GitHub release with the installable app archive.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Tag matches app version
+        run: |
+          version=$(sed -n 's:.*<version>\(.*\)</version>.*:\1:p' appinfo/info.xml)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match appinfo/info.xml version $version" >&2
+            exit 1
+          fi
+
+      - run: npm ci
+      - run: npm run validate:data
+      - run: npm run build
+      - run: bin/package.sh
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" build/vaccinations-*.tar.gz \
+            --title "$GITHUB_REF_NAME" \
+            --notes "Installation: see README → Installation. Archive: vaccinations-${GITHUB_REF_NAME#v}.tar.gz"
