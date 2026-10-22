@@ -1,0 +1,49 @@
+# Development instance for the vaccinations app.
+# Meant for the local network only – no TLS, debug mode on.
+# See dev/README.md for setup on the Synology DiskStation.
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD fehlt in .env}
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  app:
+    image: nextcloud:${NC_VERSION:-35}-apache
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "${NC_PORT:-8090}:80"
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      NEXTCLOUD_ADMIN_USER: admin
+      NEXTCLOUD_ADMIN_PASSWORD: ${NC_ADMIN_PASSWORD:?NC_ADMIN_PASSWORD fehlt in .env}
+      NEXTCLOUD_TRUSTED_DOMAINS: ${NC_TRUSTED_DOMAINS:-localhost}
+      DEV_USER_PASSWORD: ${DEV_USER_PASSWORD:?DEV_USER_PASSWORD fehlt in .env}
+    volumes: &app-volumes
+      - nextcloud:/var/www/html
+      # the repository itself is the app – edits are live without rebuilding
+      - ../:/var/www/html/custom_apps/vaccinations:ro
+      - ./hooks/post-installation:/docker-entrypoint-hooks.d/post-installation:ro
+
+  # runs Nextcloud background jobs every 5 minutes (needed for notifications later)
+  cron:
+    image: nextcloud:${NC_VERSION:-35}-apache
+    restart: unless-stopped
+    depends_on:
+      - db
+    entrypoint: /cron.sh
+    volumes: *app-volumes
+
+volumes:
+  db:
+  nextcloud:

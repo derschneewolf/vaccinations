@@ -61,6 +61,17 @@ class GuardianMapper extends QBMapper {
 	}
 
 	/**
+	 * @return int number of deleted relations (0 or 1)
+	 */
+	public function deletePair(string $guardianUid, string $wardUid): int {
+		$qb = $this->db->getQueryBuilder();
+		return $qb->delete($this->getTableName())
+			->where($qb->expr()->eq('guardian_uid', $qb->createNamedParameter($guardianUid, IQueryBuilder::PARAM_STR)))
+			->andWhere($qb->expr()->eq('ward_uid', $qb->createNamedParameter($wardUid, IQueryBuilder::PARAM_STR)))
+			->executeStatement();
+	}
+
+	/**
 	 * Removes all relations a user takes part in, as guardian or as ward.
 	 */
 	public function deleteByUserId(string $userId): void {
