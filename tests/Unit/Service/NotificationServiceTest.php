@@ -9,12 +9,12 @@ use OCA\Vaccinations\Db\GuardianMapper;
 use OCA\Vaccinations\Db\NotifiedState;
 use OCA\Vaccinations\Db\NotifiedStateMapper;
 use OCA\Vaccinations\Db\RecordMapper;
+use OCA\Vaccinations\Db\TransactionRunner;
 use OCA\Vaccinations\Schedule\RuleStatus;
 use OCA\Vaccinations\Schedule\Schedule;
 use OCA\Vaccinations\Service\NotificationService;
 use OCA\Vaccinations\Service\StatusService;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\IDBConnection;
 use OCP\Notification\IManager;
 use OCP\Notification\INotification;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -76,7 +76,7 @@ class NotificationServiceTest extends TestCase {
 			$this->manager,
 			$timeFactory,
 			$this->createMock(LoggerInterface::class),
-			$this->createMock(IDBConnection::class),
+			$this->transactionRunner(),
 		);
 	}
 
@@ -155,11 +155,10 @@ class NotificationServiceTest extends TestCase {
 		$this->assertSame([], $this->states);
 	}
 
-	public function testFailedDeliveryRollsBackAndPropagates(): void {
-		$db = $this->createMock(IDBConnection::class);
-		$db->expects($this->once())->method('beginTransaction');
-		$db->expects($this->once())->method('rollBack');
-		$db->expects($this->never())->method('commit');
+	public function testFailedDeliveryRunsInTransactionAndPropagates(): void {
+		$transaction = $this->createMock(TransactionRunner::class);
+		// the whole check of a person runs inside one transaction, so a failing delivery rolls back the state
+		$transaction->expects($this->once())->method('run')->willReturnCallback(static fn (callable $callback): mixed => $callback());
 		$manager = $this->createMock(IManager::class);
 		$manager->method('createNotification')->willReturnCallback(fn (): INotification => $this->notification());
 		$manager->method('notify')->willThrowException(new \RuntimeException('push failed'));
@@ -173,7 +172,7 @@ class NotificationServiceTest extends TestCase {
 			$manager,
 			$timeFactory,
 			$this->createMock(LoggerInterface::class),
-			$db,
+			$transaction,
 		);
 		$this->guardians(['frank']);
 		$this->statuses([$this->rule('td', RuleStatus::DUE, '2025-07-01')]);
@@ -191,6 +190,12 @@ class NotificationServiceTest extends TestCase {
 		$this->service->runForPerson('oma');
 
 		$this->assertCount(2, $this->notifiedUsers);
+	}
+
+	private function transactionRunner(): TransactionRunner {
+		$transaction = $this->createMock(TransactionRunner::class);
+		$transaction->method('run')->willReturnCallback(static fn (callable $callback): mixed => $callback());
+		return $transaction;
 	}
 
 	/**

@@ -9,10 +9,9 @@ use OCA\Vaccinations\Db\GuardianMapper;
 use OCA\Vaccinations\Db\NotifiedState;
 use OCA\Vaccinations\Db\NotifiedStateMapper;
 use OCA\Vaccinations\Db\RecordMapper;
+use OCA\Vaccinations\Db\TransactionRunner;
 use OCA\Vaccinations\Schedule\RuleStatus;
-use OCP\AppFramework\Db\TTransactional;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\IDBConnection;
 use OCP\Notification\IManager;
 use OCP\Notification\INotification;
 use Psr\Log\LoggerInterface;
@@ -26,8 +25,6 @@ use Psr\Log\LoggerInterface;
  * - once a vaccination is no longer pending, its notification disappears
  */
 class NotificationService {
-	use TTransactional;
-
 	public const OBJECT_TYPE = 'vaccination';
 	public const SUBJECT = 'vaccination';
 
@@ -42,7 +39,7 @@ class NotificationService {
 		private readonly IManager $notificationManager,
 		private readonly ITimeFactory $timeFactory,
 		private readonly LoggerInterface $logger,
-		private readonly IDBConnection $db,
+		private readonly TransactionRunner $transaction,
 	) {
 	}
 
@@ -67,7 +64,7 @@ class NotificationService {
 	 * fails, nothing is marked as announced and the next run tries again.
 	 */
 	public function runForPerson(string $personUid): int {
-		return $this->atomic(fn (): int => $this->checkPerson($personUid), $this->db);
+		return $this->transaction->run(fn (): int => $this->checkPerson($personUid));
 	}
 
 	private function checkPerson(string $personUid): int {
