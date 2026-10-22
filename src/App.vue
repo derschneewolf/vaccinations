@@ -20,7 +20,13 @@
 						<span class="vaccinations__light"
 							:class="`vaccinations__light--${person.light.level}`"
 							:title="person.light.title">
-							<NcIconSvgWrapper v-if="person.light.level === 'ok'" :path="mdiCheck" :size="14" />
+							<!-- plain SVG: NcIconSvgWrapper reserves a 44px click area and inflates the badge -->
+							<svg v-if="person.light.level === 'ok'"
+								class="vaccinations__light-icon"
+								viewBox="0 0 24 24"
+								aria-hidden="true">
+								<path :d="mdiCheck" />
+							</svg>
 							{{ person.light.label }}
 						</span>
 					</template>
@@ -124,6 +130,12 @@ function onStatusLoaded(userId, rules) {
 	border: 1px solid transparent;
 	font-size: var(--font-size-small, 13px);
 	white-space: nowrap;
+
+	&-icon {
+		width: 14px;
+		height: 14px;
+		fill: currentColor;
+	}
 
 	&--error {
 		// NC 32+: --color-error is a light background, the strong colour is --color-element-error
