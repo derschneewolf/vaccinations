@@ -71,7 +71,8 @@ sudo docker exec -u www-data vaccinations-dev-app-1 php occ upgrade
 - `git pull` holt den Code; PHP-Änderungen sind damit sofort aktiv.
 - `docker compose up -d` übernimmt Änderungen an `compose.yaml` (z. B. neue Container). Ohne Änderungen passiert nichts.
 - `occ upgrade` ist nötig, wenn sich die App-Version in `appinfo/info.xml` geändert hat (neue Migrationen, Befehle, Navigation). Sonst meldet es nur „Nextcloud is already latest version“.
-- Die Oberfläche baut der `frontend`-Container automatisch neu (ca. 20–60 s). Fortschritt im Log des Containers `vaccinations-dev-frontend-1`; danach im Browser neu laden.
+- Die Oberfläche baut der `frontend`-Container automatisch neu (ca. 20–60 s). Fortschritt im Log des Containers `vaccinations-dev-frontend-1`.
+- Danach im Browser **Strg + F5** (bzw. Strg + Umschalt + R). Ein normales Neuladen reicht nicht: Nextcloud erlaubt dem Browser, die Skripte lange zu cachen.
 
 **occ aufrufen** – Container Manager → Container → `vaccinations-dev-app-1` → Terminal → *Erstellen* mit Befehl `bash`, dann:
 ```sh
