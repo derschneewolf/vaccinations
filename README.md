@@ -99,6 +99,10 @@ Danach im Browser einmal **Strg + F5**, damit die neue Oberfläche geladen wird.
 - Impfungen, die gar nicht erfasst sind, erscheinen als **„nicht dokumentiert“** statt als überfällig; eine angefangene, unvollständige Serie gilt dagegen als echte Lücke.
 - Benachrichtigungen kommen einmal täglich über den Hintergrundjob. Sofort prüfen: `occ vaccinations:notify`.
 
+## Neue Version veröffentlichen
+
+Version in `appinfo/info.xml` (und `package.json`) erhöhen und auf `main` pushen. Die GitHub-Action [`release.yml`](.github/workflows/release.yml) baut dann das Paket und legt das Release `v<version>` an.
+
 ## Mitmachen
 
 - **Impfstoff fehlt?** Eine Datei unter [`data/vaccines/`](data/vaccines) anlegen – Vorlage ist jede vorhandene Datei, das Schema steht in [`data/schema/vaccine.schema.json`](data/schema/vaccine.schema.json). Die GitHub-Action prüft jeden Pull-Request automatisch.

@@ -1,41 +1,58 @@
 name: Release
 
-# Push a tag like v0.4.0 (matching <version> in appinfo/info.xml) to publish
-# a GitHub release with the installable app archive.
+# Publishes a GitHub release with the installable app archive whenever main
+# contains an app version (appinfo/info.xml) that has not been released yet.
+# To release: raise <version> in appinfo/info.xml and push to main.
 on:
   push:
-    tags: ['v*']
+    branches: [main]
+    paths: ['appinfo/info.xml', '.github/workflows/release.yml']
+  workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency: release
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+
+      - name: Determine version
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(sed -n 's:.*<version>\(.*\)</version>.*:\1:p' appinfo/info.xml)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if gh release view "v$version" > /dev/null 2>&1; then
+            echo "v$version is already released – nothing to do"
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/setup-node@v5
+        if: steps.version.outputs.exists != 'true'
         with:
           node-version: 22
           cache: npm
 
-      - name: Tag matches app version
+      - name: Build archive
+        if: steps.version.outputs.exists != 'true'
         run: |
-          version=$(sed -n 's:.*<version>\(.*\)</version>.*:\1:p' appinfo/info.xml)
-          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
-            echo "Tag $GITHUB_REF_NAME does not match appinfo/info.xml version $version" >&2
-            exit 1
-          fi
-
-      - run: npm ci
-      - run: npm run validate:data
-      - run: npm run build
-      - run: bin/package.sh
+          npm ci
+          npm run validate:data
+          npm run build
+          bin/package.sh
 
       - name: Create release
+        if: steps.version.outputs.exists != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          gh release create "$GITHUB_REF_NAME" build/vaccinations-*.tar.gz \
-            --title "$GITHUB_REF_NAME" \
-            --notes "Installation: see README → Installation. Archive: vaccinations-${GITHUB_REF_NAME#v}.tar.gz"
+          gh release create "v$VERSION" "build/vaccinations-$VERSION.tar.gz" \
+            --target "$GITHUB_SHA" \
+            --title "v$VERSION" \
+            --notes "Installation und Update: siehe [README](https://github.com/$GITHUB_REPOSITORY#installation)."
