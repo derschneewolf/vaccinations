@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "influsplit",
+  "name": "Influsplit",
+  "aliases": [
+    "Grippe",
+    "Influsplit Tetra"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "influenza"
+  ],
+  "type": "inactivated",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

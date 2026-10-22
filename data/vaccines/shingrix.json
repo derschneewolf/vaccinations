@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "shingrix",
+  "name": "Shingrix",
+  "aliases": [
+    "Gürtelrose",
+    "Zoster"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "herpes-zoster"
+  ],
+  "type": "subunit",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

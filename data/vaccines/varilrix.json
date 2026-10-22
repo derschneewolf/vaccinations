@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "varilrix",
+  "name": "Varilrix",
+  "aliases": [
+    "Windpocken",
+    "Varizellen"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "varicella"
+  ],
+  "type": "live",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

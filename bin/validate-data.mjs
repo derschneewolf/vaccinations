@@ -18,6 +18,7 @@ const ajv = new Ajv2020({ allErrors: true })
 addFormats(ajv)
 const validateVaccine = ajv.compile(readJson(join(dataDir, 'schema/vaccine.schema.json')))
 const validateDiseases = ajv.compile(readJson(join(dataDir, 'schema/diseases.schema.json')))
+const validateSchedule = ajv.compile(readJson(join(dataDir, 'schema/schedule.schema.json')))
 
 const errors = []
 
@@ -47,8 +48,29 @@ for (const file of vaccineFiles) {
 	}
 }
 
+const scheduleFiles = readdirSync(join(dataDir, 'schedules')).filter((file) => file.endsWith('.json'))
+for (const file of scheduleFiles) {
+	const schedule = readJson(join(dataDir, 'schedules', file))
+	if (!validateSchedule(schedule)) {
+		errors.push(`schedules/${file}: ${ajv.errorsText(validateSchedule.errors)}`)
+		continue
+	}
+	if (basename(file, '.json') !== schedule.id) errors.push(`schedules/${file}: file name must be "${schedule.id}.json"`)
+	const ruleIds = new Set()
+	for (const rule of schedule.rules) {
+		if (ruleIds.has(rule.id)) errors.push(`schedules/${file}: duplicate rule id "${rule.id}"`)
+		ruleIds.add(rule.id)
+		for (const diseaseId of rule.diseases) {
+			if (!diseaseIds.has(diseaseId)) errors.push(`schedules/${file}: rule "${rule.id}" uses unknown disease "${diseaseId}"`)
+		}
+	}
+	for (const rule of schedule.rules) {
+		if (rule.alignWith && !ruleIds.has(rule.alignWith)) errors.push(`schedules/${file}: rule "${rule.id}" aligns with unknown rule "${rule.alignWith}"`)
+	}
+}
+
 if (errors.length > 0) {
 	console.error(errors.map((error) => `✗ ${error}`).join('\n'))
 	process.exit(1)
 }
-console.log(`✓ ${diseaseIds.size} diseases, ${vaccineIds.size} vaccines valid`)
+console.log(`✓ ${diseaseIds.size} diseases, ${vaccineIds.size} vaccines, ${scheduleFiles.length} schedule(s) valid`)

@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "twinrix-pediatric",
+  "name": "Twinrix Kinder",
+  "aliases": [
+    "Twinrix"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "hepatitis-a",
+    "hepatitis-b"
+  ],
+  "type": "inactivated",
+  "variant": "pediatric",
+  "markets": [
+    "DE"
+  ]
+}

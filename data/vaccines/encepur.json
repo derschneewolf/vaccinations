@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "encepur",
+  "name": "Encepur",
+  "aliases": [
+    "FSME",
+    "Zecken",
+    "Encepur Kinder"
+  ],
+  "manufacturer": "Bavarian Nordic",
+  "diseases": [
+    "tbe"
+  ],
+  "type": "inactivated",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "comirnaty",
+  "name": "Comirnaty",
+  "aliases": [
+    "BioNTech",
+    "Corona"
+  ],
+  "manufacturer": "BioNTech/Pfizer",
+  "diseases": [
+    "covid-19"
+  ],
+  "type": "mrna",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

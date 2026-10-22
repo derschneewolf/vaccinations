@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "covaxis",
+  "name": "Covaxis",
+  "aliases": [
+    "Tdap"
+  ],
+  "manufacturer": "Sanofi",
+  "diseases": [
+    "tetanus",
+    "diphtheria",
+    "pertussis"
+  ],
+  "type": "inactivated",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

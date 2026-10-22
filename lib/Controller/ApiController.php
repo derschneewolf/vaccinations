@@ -13,6 +13,7 @@ use OCA\Vaccinations\Exception\NotFoundException;
 use OCA\Vaccinations\Exception\ValidationException;
 use OCA\Vaccinations\Service\PersonService;
 use OCA\Vaccinations\Service\RecordService;
+use OCA\Vaccinations\Service\StatusService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\ApiRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -35,6 +36,7 @@ class ApiController extends OCSController {
 		private readonly IUserSession $userSession,
 		private readonly PersonService $personService,
 		private readonly RecordService $recordService,
+		private readonly StatusService $statusService,
 		private readonly Catalog $catalog,
 	) {
 		parent::__construct(Application::APP_ID, $request);
@@ -79,6 +81,17 @@ class ApiController extends OCSController {
 	#[ApiRoute(verb: 'GET', url: '/api/v1/persons/{userId}/records')]
 	public function records(string $userId): DataResponse {
 		return $this->handle(fn (): array => $this->recordService->findForPerson($this->actorUid(), $userId));
+	}
+
+	/**
+	 * Vaccination status against the person's schedule.
+	 *
+	 * @return ApiResult
+	 */
+	#[NoAdminRequired]
+	#[ApiRoute(verb: 'GET', url: '/api/v1/persons/{userId}/status')]
+	public function status(string $userId): DataResponse {
+		return $this->handle(fn (): array => $this->statusService->forPerson($this->actorUid(), $userId));
 	}
 
 	/**

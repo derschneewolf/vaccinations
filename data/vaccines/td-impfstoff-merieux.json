@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "td-impfstoff-merieux",
+  "name": "Td-Impfstoff Mérieux",
+  "aliases": [
+    "Td",
+    "Td-Impfstoff Merieux"
+  ],
+  "manufacturer": "Sanofi",
+  "diseases": [
+    "tetanus",
+    "diphtheria"
+  ],
+  "type": "toxoid",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "menjugate",
+  "name": "Menjugate",
+  "aliases": [
+    "MenC"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "meningococcal-c"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "td-pur",
+  "name": "Td-pur",
+  "aliases": [
+    "Td"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "tetanus",
+    "diphtheria"
+  ],
+  "type": "toxoid",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

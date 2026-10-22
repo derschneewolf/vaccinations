@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "trumenba",
+  "name": "Trumenba",
+  "aliases": [
+    "MenB"
+  ],
+  "manufacturer": "Pfizer",
+  "diseases": [
+    "meningococcal-b"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

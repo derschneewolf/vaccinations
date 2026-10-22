@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "gardasil-9",
+  "name": "Gardasil 9",
+  "aliases": [
+    "HPV"
+  ],
+  "manufacturer": "MSD",
+  "diseases": [
+    "hpv"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

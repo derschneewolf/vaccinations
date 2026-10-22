@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "fsme-immun",
+  "name": "FSME-IMMUN",
+  "aliases": [
+    "FSME",
+    "Zecken",
+    "FSME-IMMUN Junior"
+  ],
+  "manufacturer": "Pfizer",
+  "diseases": [
+    "tbe"
+  ],
+  "type": "inactivated",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

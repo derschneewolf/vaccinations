@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "abrysvo",
+  "name": "Abrysvo",
+  "aliases": [
+    "RSV"
+  ],
+  "manufacturer": "Pfizer",
+  "diseases": [
+    "rsv"
+  ],
+  "type": "subunit",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

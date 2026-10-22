@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "varivax",
+  "name": "Varivax",
+  "aliases": [
+    "Windpocken",
+    "Varizellen"
+  ],
+  "manufacturer": "MSD",
+  "diseases": [
+    "varicella"
+  ],
+  "type": "live",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

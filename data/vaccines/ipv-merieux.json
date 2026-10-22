@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "ipv-merieux",
+  "name": "IPV Mérieux",
+  "aliases": [
+    "IPV",
+    "IPV Merieux",
+    "Polio"
+  ],
+  "manufacturer": "Sanofi",
+  "diseases": [
+    "polio"
+  ],
+  "type": "inactivated",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

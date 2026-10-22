@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "revaxis",
+  "name": "Revaxis",
+  "aliases": [
+    "Td-IPV"
+  ],
+  "manufacturer": "Sanofi",
+  "diseases": [
+    "tetanus",
+    "diphtheria",
+    "polio"
+  ],
+  "type": "inactivated",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

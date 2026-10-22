@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "vaxigrip",
+  "name": "Vaxigrip",
+  "aliases": [
+    "Grippe",
+    "Vaxigrip Tetra"
+  ],
+  "manufacturer": "Sanofi",
+  "diseases": [
+    "influenza"
+  ],
+  "type": "inactivated",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

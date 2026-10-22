@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "infanrix",
+  "name": "Infanrix",
+  "aliases": [
+    "DTaP"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "diphtheria",
+    "tetanus",
+    "pertussis"
+  ],
+  "type": "inactivated",
+  "variant": "pediatric",
+  "markets": [
+    "DE"
+  ],
+  "discontinued": true
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "vaxzevria",
+  "name": "Vaxzevria",
+  "aliases": [
+    "AstraZeneca",
+    "Corona"
+  ],
+  "manufacturer": "AstraZeneca",
+  "diseases": [
+    "covid-19"
+  ],
+  "type": "vector",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ],
+  "discontinued": true
+}

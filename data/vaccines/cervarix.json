@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "cervarix",
+  "name": "Cervarix",
+  "aliases": [
+    "HPV"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "hpv"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

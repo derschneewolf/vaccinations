@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "fluenz",
+  "name": "Fluenz",
+  "aliases": [
+    "Grippe",
+    "Nasenspray",
+    "Fluenz Tetra"
+  ],
+  "manufacturer": "AstraZeneca",
+  "diseases": [
+    "influenza"
+  ],
+  "type": "live",
+  "variant": "pediatric",
+  "markets": [
+    "DE"
+  ]
+}

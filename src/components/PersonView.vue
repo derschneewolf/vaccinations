@@ -23,6 +23,8 @@
 			</NcButton>
 		</header>
 
+		<StatusTable v-if="status && catalog" :status="status" :catalog="catalog" />
+
 		<div v-if="loading" class="person__center">
 			<NcLoadingIcon :size="32" />
 		</div>
@@ -36,30 +38,6 @@
 		</NcEmptyContent>
 
 		<template v-else>
-			<section class="person__section">
-				<h3>{{ t('vaccinations', 'Protection by disease') }}</h3>
-				<table class="person__table">
-					<thead>
-						<tr>
-							<th>{{ t('vaccinations', 'Disease') }}</th>
-							<th class="person__number">
-								{{ t('vaccinations', 'Doses') }}
-							</th>
-							<th>{{ t('vaccinations', 'Last vaccination') }}</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="row in protection" :key="row.diseaseId">
-							<td>{{ row.name }}</td>
-							<td class="person__number">
-								{{ row.doses }}
-							</td>
-							<td>{{ formatDate(row.lastDate) }}</td>
-						</tr>
-					</tbody>
-				</table>
-			</section>
-
 			<section class="person__section">
 				<h3>{{ t('vaccinations', 'Vaccination history') }}</h3>
 				<table class="person__table">
@@ -139,7 +117,7 @@
 import { mdiDelete, mdiNeedle, mdiPencil, mdiPlus } from '@mdi/js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -149,6 +127,7 @@ import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import RecordDialog from './RecordDialog.vue'
+import StatusTable from './StatusTable.vue'
 import { api } from '../api.js'
 import { formatDate, fromIsoDate, isPlausiblePastDate, toIsoDate } from '../dates.js'
 
@@ -159,12 +138,14 @@ const props = defineProps({
 const emit = defineEmits(['person-updated'])
 
 const records = ref([])
+const status = ref(null)
 const loading = ref(true)
 const dialogOpen = ref(false)
 const recordToEdit = ref(null)
 const recordToDelete = ref(null)
 
 onMounted(async () => {
+	loadStatus()
 	try {
 		records.value = await api.records(props.person.userId)
 	} catch (error) {
@@ -174,23 +155,20 @@ onMounted(async () => {
 	}
 })
 
+/** Recomputed by the server after every change of records or the date of birth. */
+async function loadStatus() {
+	try {
+		status.value = await api.status(props.person.userId)
+	} catch (error) {
+		showError(t('vaccinations', 'Could not load the vaccination status: {message}', { message: error.message }))
+	}
+}
+
+watch(() => props.person.birthDate, loadStatus)
+
 // newest first; same day: most recently entered first
 const sortedRecords = computed(() => [...records.value].sort((a, b) =>
 	b.administeredOn.localeCompare(a.administeredOn) || b.id - a.id))
-
-// doses and last date per disease, derived from the vaccine → disease mapping
-const protection = computed(() => {
-	const byDisease = new Map()
-	for (const record of records.value) {
-		for (const diseaseId of props.catalog.vaccine(record.vaccineId)?.diseaseIds ?? []) {
-			const entry = byDisease.get(diseaseId) ?? { diseaseId, name: props.catalog.diseaseName(diseaseId), doses: 0, lastDate: '' }
-			entry.doses++
-			entry.lastDate = record.administeredOn > entry.lastDate ? record.administeredOn : entry.lastDate
-			byDisease.set(diseaseId, entry)
-		}
-	}
-	return [...byDisease.values()].sort((a, b) => a.name.localeCompare(b.name))
-})
 
 function openCreate() {
 	recordToEdit.value = null
@@ -212,6 +190,7 @@ async function saveRecord(input) {
 	}
 	dialogOpen.value = false
 	showSuccess(t('vaccinations', 'Vaccination saved'))
+	loadStatus()
 }
 
 const deleteButtons = [
@@ -224,6 +203,7 @@ async function deleteRecord() {
 	try {
 		await api.deleteRecord(record.id)
 		records.value = records.value.filter((item) => item.id !== record.id)
+		loadStatus()
 	} catch (error) {
 		showError(t('vaccinations', 'Could not delete: {message}', { message: error.message }))
 	}

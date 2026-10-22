@@ -41,6 +41,7 @@ Basis: `/ocs/v2.php/apps/vaccinations/api/v1`, Header `OCS-APIRequest: true`.
 | GET | `/persons` | pflegbare Personen (selbst zuerst; Admin: alle) |
 | PUT | `/persons/{userId}` | Geburtsdatum setzen (`birthDate`, `null` löscht) |
 | GET | `/persons/{userId}/records` | Impfungen einer Person |
+| GET | `/persons/{userId}/status` | Impfstatus gegen den Impfkalender |
 | POST | `/persons/{userId}/records` | Impfung anlegen |
 | PUT | `/records/{id}` | Impfung ersetzen (alle Felder) |
 | DELETE | `/records/{id}` | Impfung löschen |
@@ -53,7 +54,18 @@ Fehler: 400 `{field, message}`, 403 bei fremden Personen, 404 bei fremden oder u
 Lesen = Schreiben (wer ein Kind betreut, muss es auch pflegen können).
 Betreuer-Zuordnungen pflegt der Admin in den Admin-Einstellungen der App.
 
-## Impfkalender-Format (Entwurf)
+## Impfkalender
+
+Datei `data/schedules/de-stiko.json`, Schema `data/schema/schedule.schema.json`, fachliche Übersicht zum Gegenprüfen: [`STIKO-REGELN.md`](STIKO-REGELN.md).
+
+Regelarten:
+- `series` – Dosen nach Alter (`age`, `dueUntil`, `minInterval`), Varianten je nach Alter bei der ersten Dosis (`fromAge`), gilt bis `until`; optional `then.every` für Auffrischungen (Td alle 10 Jahre)
+- `once` – ab `fromAge` (PCV20 ab 60, Zoster 2 Dosen mit `maxInterval`), optional `bornAfter`, `satisfiedByTotalDoses`, `alignWith` (Tdap mit der nächsten Td)
+- `seasonal` – jährlich ab `fromAge` in der Saison `seasonStart`–`seasonEnd`
+
+Eine Impfung zählt für eine Regel nur, wenn der Impfstoff alle Krankheiten der Regel abdeckt. Leere Historie → „nicht dokumentiert“, teilweise Historie → fällig/überfällig. Auswertung: `OCA\Vaccinations\Schedule\ScheduleEvaluator`, Tests in `tests/Unit/Schedule`.
+
+## Impfkalender-Format (ursprünglicher Entwurf)
 
 Regeln pro Krankheit, deklarativ. Die Engine wertet sie gegen die Dosen aus, die über das Mapping auf die Krankheit fallen.
 
@@ -77,7 +89,7 @@ Regeln pro Krankheit, deklarativ. Die Engine wertet sie gegen die Dosen aus, die
 Zeitangaben als ISO-8601-Dauer (`P2M`, `P10Y`). Ergebnis pro Krankheit:
 `complete` · `due` (fällig ab Datum) · `overdue` · `incomplete` · `unknown` (z. B. kein Geburtsdatum).
 
-**Fachlich offen:** konkrete STIKO-Inhalte, Altersregeln, Indikations-Impfungen – kommt in Phase 4, testgetrieben.
+Indikations-, Berufs- und Reiseimpfungen sind noch nicht enthalten.
 
 ## Phasen
 
@@ -85,6 +97,6 @@ Zeitangaben als ISO-8601-Dauer (`P2M`, `P10Y`). Ergebnis pro Krankheit:
 2. ✅ Entities/Mapper (`Person`, `Record`, `Guardian`), `Catalog` für `data/` inkl. Autocomplete-Suche, Aufräumen bei gelöschtem User, PHPUnit + PHPStan (Level 8) + CI
 2b. ✅ Entwicklungsinstanz auf der DiskStation (`dev/`), `occ vaccinations:guardian:*`, Migration gegen PostgreSQL + NC 35 bestätigt
 3. ✅ OCS-API + Vue-Frontend (Vue 3, @nextcloud/vue 9): Personenliste, Geburtsdatum, Schutz nach Krankheit, Impfhistorie, Erfassen/Bearbeiten/Löschen mit Impfstoff-Suche (auch nach Krankheit), Deutsch (Du/Sie)
-4. Regel-Engine + STIKO-Kalender (PHPUnit, viele Fälle)
+4. ✅ Regel-Engine + STIKO-Kalender 2026 (Standardimpfungen aller Altersgruppen), 64 Impfstoffe im Katalog, Statusanzeige mit Fälligkeiten
 5. Übersicht fällig/überfällig, Notifications via Background-Job
 6. App-Store-Release

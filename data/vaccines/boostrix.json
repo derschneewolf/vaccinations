@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "boostrix",
+  "name": "Boostrix",
+  "aliases": [
+    "Tdap"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "tetanus",
+    "diphtheria",
+    "pertussis"
+  ],
+  "type": "inactivated",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "neisvac-c",
+  "name": "NeisVac-C",
+  "aliases": [
+    "MenC"
+  ],
+  "manufacturer": "Pfizer",
+  "diseases": [
+    "meningococcal-c"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

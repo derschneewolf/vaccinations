@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "zostavax",
+  "name": "Zostavax",
+  "aliases": [
+    "Gürtelrose",
+    "Zoster"
+  ],
+  "manufacturer": "MSD",
+  "diseases": [
+    "herpes-zoster"
+  ],
+  "type": "live",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ],
+  "discontinued": true
+}

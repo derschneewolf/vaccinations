@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "tetanol-pur",
+  "name": "Tetanol pur",
+  "aliases": [
+    "Tetanus"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "tetanus"
+  ],
+  "type": "toxoid",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

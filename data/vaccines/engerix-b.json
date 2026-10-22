@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "engerix-b",
+  "name": "Engerix-B",
+  "aliases": [
+    "Hepatitis B"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "hepatitis-b"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

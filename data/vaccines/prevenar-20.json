@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "prevenar-20",
+  "name": "Prevenar 20",
+  "aliases": [
+    "PCV20"
+  ],
+  "manufacturer": "Pfizer",
+  "diseases": [
+    "pneumococcal"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

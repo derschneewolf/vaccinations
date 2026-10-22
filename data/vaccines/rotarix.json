@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "rotarix",
+  "name": "Rotarix",
+  "aliases": [
+    "Rotavirus"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "rotavirus"
+  ],
+  "type": "live",
+  "variant": "pediatric",
+  "markets": [
+    "DE"
+  ]
+}

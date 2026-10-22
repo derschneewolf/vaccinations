@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "hbvaxpro",
+  "name": "HBVAXPRO",
+  "aliases": [
+    "Hepatitis B"
+  ],
+  "manufacturer": "MSD",
+  "diseases": [
+    "hepatitis-b"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

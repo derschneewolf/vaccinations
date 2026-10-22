@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "vaxneuvance",
+  "name": "Vaxneuvance",
+  "aliases": [
+    "PCV15"
+  ],
+  "manufacturer": "MSD",
+  "diseases": [
+    "pneumococcal"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

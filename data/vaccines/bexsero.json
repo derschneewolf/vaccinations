@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "bexsero",
+  "name": "Bexsero",
+  "aliases": [
+    "MenB",
+    "4CMenB"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "meningococcal-b"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

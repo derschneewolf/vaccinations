@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "menquadfi",
+  "name": "MenQuadfi",
+  "aliases": [
+    "MenACWY"
+  ],
+  "manufacturer": "Sanofi",
+  "diseases": [
+    "meningococcal-a",
+    "meningococcal-c",
+    "meningococcal-w",
+    "meningococcal-y"
+  ],
+  "type": "subunit",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "jcovden",
+  "name": "Jcovden",
+  "aliases": [
+    "Johnson & Johnson",
+    "Corona"
+  ],
+  "manufacturer": "Janssen",
+  "diseases": [
+    "covid-19"
+  ],
+  "type": "vector",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ],
+  "discontinued": true
+}

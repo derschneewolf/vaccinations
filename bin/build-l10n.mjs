@@ -14,8 +14,14 @@ function collectSourceStrings(dir, found = new Set()) {
 		if (entry.isDirectory()) {
 			collectSourceStrings(path, found)
 		} else if (/\.(vue|js)$/.test(entry.name)) {
-			for (const match of readFileSync(path, 'utf8').matchAll(/t\('vaccinations', '((?:[^'\\]|\\.)*)'/g)) {
-				found.add(match[1].replace(/\\'/g, "'"))
+			const source = readFileSync(path, 'utf8')
+			const unescape = (text) => text.replace(/\\'/g, "'")
+			for (const match of source.matchAll(/\bt\('vaccinations', '((?:[^'\\]|\\.)*)'/g)) {
+				found.add(unescape(match[1]))
+			}
+			// plurals: n('vaccinations', singular, plural, count) → key "_singular_::_plural_"
+			for (const match of source.matchAll(/\bn\('vaccinations', '((?:[^'\\]|\\.)*)', '((?:[^'\\]|\\.)*)'/g)) {
+				found.add(`_${unescape(match[1])}_::_${unescape(match[2])}_`)
 			}
 		}
 	}
@@ -26,15 +32,23 @@ const sourceStrings = collectSourceStrings(join(root, 'src'))
 sourceStrings.add('Vaccinations') // navigation entry in appinfo/info.xml
 
 // de = informal (Du), de_DE = formal (Sie) in Nextcloud; same texts apart from the address
+const formal = {
+	'Du': 'Sie',
+	'Trage die Einträge aus dem Impfpass ein – am besten mit den neuesten beginnen.': 'Tragen Sie die Einträge aus dem Impfpass ein – am besten mit den neuesten beginnen.',
+	'Gib das Geburtsdatum ein, damit die Impfungen mit dem Impfkalender abgeglichen werden können.': 'Geben Sie das Geburtsdatum ein, damit die Impfungen mit dem Impfkalender abgeglichen werden können.',
+}
 const variants = {
 	de: (text) => text,
-	de_DE: (text) => text
-		.replace(/^Du$/, 'Sie')
-		.replace('Trage die Einträge aus dem Impfpass ein – am besten mit den neuesten beginnen.', 'Tragen Sie die Einträge aus dem Impfpass ein – am besten mit den neuesten beginnen.'),
+	de_DE: (text) => (typeof text === 'string' ? formal[text] ?? text : text),
 }
 
 const translations = JSON.parse(readFileSync(join(root, 'bin/translations-de.json'), 'utf8'))
 const missing = [...sourceStrings].filter((text) => !(text in translations))
+const unused = Object.keys(translations).filter((text) => !sourceStrings.has(text))
+if (unused.length > 0) {
+	console.error('Translations no longer used in the code (remove them):\n' + unused.map((text) => `  - ${text}`).join('\n'))
+	process.exit(1)
+}
 if (missing.length > 0) {
 	console.error('Missing German translations:\n' + missing.map((text) => `  - ${text}`).join('\n'))
 	process.exit(1)

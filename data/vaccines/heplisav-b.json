@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "heplisav-b",
+  "name": "Heplisav B",
+  "aliases": [
+    "Hepatitis B"
+  ],
+  "manufacturer": "Dynavax",
+  "diseases": [
+    "hepatitis-b"
+  ],
+  "type": "subunit",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

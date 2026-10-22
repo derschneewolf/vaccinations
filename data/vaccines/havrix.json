@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "havrix",
+  "name": "Havrix",
+  "aliases": [
+    "Havrix 1440",
+    "Havrix 720",
+    "Hepatitis A"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "hepatitis-a"
+  ],
+  "type": "inactivated",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

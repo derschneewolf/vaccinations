@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "fluad",
+  "name": "Fluad",
+  "aliases": [
+    "Grippe",
+    "Fluad Tetra",
+    "adjuvantiert"
+  ],
+  "manufacturer": "Seqirus",
+  "diseases": [
+    "influenza"
+  ],
+  "type": "inactivated",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

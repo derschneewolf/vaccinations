@@ -1,0 +1,23 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "vaxelis",
+  "name": "Vaxelis",
+  "aliases": [
+    "6-fach",
+    "Sechsfach"
+  ],
+  "manufacturer": "MCM Vaccine",
+  "diseases": [
+    "diphtheria",
+    "tetanus",
+    "pertussis",
+    "polio",
+    "hib",
+    "hepatitis-b"
+  ],
+  "type": "inactivated",
+  "variant": "pediatric",
+  "markets": [
+    "DE"
+  ]
+}

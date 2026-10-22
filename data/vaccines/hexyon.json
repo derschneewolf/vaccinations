@@ -1,0 +1,23 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "hexyon",
+  "name": "Hexyon",
+  "aliases": [
+    "6-fach",
+    "Sechsfach"
+  ],
+  "manufacturer": "Sanofi",
+  "diseases": [
+    "diphtheria",
+    "tetanus",
+    "pertussis",
+    "polio",
+    "hib",
+    "hepatitis-b"
+  ],
+  "type": "inactivated",
+  "variant": "pediatric",
+  "markets": [
+    "DE"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "infanrix-ipv-hib",
+  "name": "Infanrix-IPV+Hib",
+  "aliases": [
+    "5-fach",
+    "Fünffach"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "diphtheria",
+    "tetanus",
+    "pertussis",
+    "polio",
+    "hib"
+  ],
+  "type": "inactivated",
+  "variant": "pediatric",
+  "markets": [
+    "DE"
+  ],
+  "discontinued": true
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "arexvy",
+  "name": "Arexvy",
+  "aliases": [
+    "RSV"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "rsv"
+  ],
+  "type": "subunit",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

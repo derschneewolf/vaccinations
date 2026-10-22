@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "m-m-rvaxpro",
+  "name": "M-M-RvaxPro",
+  "aliases": [
+    "MMR"
+  ],
+  "manufacturer": "MSD",
+  "diseases": [
+    "measles",
+    "mumps",
+    "rubella"
+  ],
+  "type": "live",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

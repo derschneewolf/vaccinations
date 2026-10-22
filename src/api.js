@@ -32,6 +32,7 @@ export const api = {
 	persons: () => request('get', '/persons'),
 	updatePerson: (userId, birthDate) => request('put', `/persons/${encode(userId)}`, { birthDate }),
 	records: (userId) => request('get', `/persons/${encode(userId)}/records`),
+	status: (userId) => request('get', `/persons/${encode(userId)}/status`),
 	createRecord: (userId, record) => request('post', `/persons/${encode(userId)}/records`, record),
 	updateRecord: (id, record) => request('put', `/records/${id}`, record),
 	deleteRecord: (id) => request('delete', `/records/${id}`),

@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "efluelda",
+  "name": "Efluelda",
+  "aliases": [
+    "Grippe",
+    "Hochdosis",
+    "Efluelda Tetra",
+    "Efluelda Trivalent"
+  ],
+  "manufacturer": "Sanofi",
+  "diseases": [
+    "influenza"
+  ],
+  "type": "inactivated",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

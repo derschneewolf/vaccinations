@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "flucelvax",
+  "name": "Flucelvax",
+  "aliases": [
+    "Grippe",
+    "Flucelvax Tetra"
+  ],
+  "manufacturer": "Seqirus",
+  "diseases": [
+    "influenza"
+  ],
+  "type": "inactivated",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

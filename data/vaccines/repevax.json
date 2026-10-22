@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "repevax",
+  "name": "Repevax",
+  "aliases": [
+    "Tdap-IPV"
+  ],
+  "manufacturer": "Sanofi",
+  "diseases": [
+    "tetanus",
+    "diphtheria",
+    "pertussis",
+    "polio"
+  ],
+  "type": "inactivated",
+  "variant": "adult",
+  "markets": [
+    "DE"
+  ]
+}

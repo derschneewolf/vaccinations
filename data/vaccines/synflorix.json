@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "synflorix",
+  "name": "Synflorix",
+  "aliases": [
+    "PCV10"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "pneumococcal"
+  ],
+  "type": "subunit",
+  "variant": "pediatric",
+  "markets": [
+    "DE"
+  ],
+  "discontinued": true
+}

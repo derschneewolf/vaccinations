@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\Vaccinations\Catalog;
 
 use JsonException;
+use OCA\Vaccinations\Schedule\Schedule;
 
 /**
  * Read-only access to the open data in data/ (diseases and vaccines).
@@ -18,6 +19,8 @@ class Catalog {
 	private ?array $diseases = null;
 	/** @var array<string, Vaccine>|null */
 	private ?array $vaccines = null;
+	/** @var array<string, Schedule>|null */
+	private ?array $schedules = null;
 
 	public function __construct(
 		private readonly string $dataDir,
@@ -44,6 +47,24 @@ class Catalog {
 
 	public function getVaccine(string $id): ?Vaccine {
 		return $this->getVaccines()[$id] ?? null;
+	}
+
+	/**
+	 * @return array<string, Schedule> keyed by id
+	 */
+	public function getSchedules(): array {
+		if ($this->schedules === null) {
+			$this->schedules = [];
+			foreach (glob($this->dataDir . '/schedules/*.json') ?: [] as $file) {
+				$schedule = Schedule::fromArray($this->readJson($file));
+				$this->schedules[$schedule->id] = $schedule;
+			}
+		}
+		return $this->schedules;
+	}
+
+	public function getSchedule(string $id): ?Schedule {
+		return $this->getSchedules()[$id] ?? null;
 	}
 
 	/**

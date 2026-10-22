@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "avaxim",
+  "name": "Avaxim",
+  "aliases": [
+    "Hepatitis A"
+  ],
+  "manufacturer": "Sanofi",
+  "diseases": [
+    "hepatitis-a"
+  ],
+  "type": "inactivated",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

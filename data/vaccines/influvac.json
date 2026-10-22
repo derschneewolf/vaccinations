@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "influvac",
+  "name": "Influvac",
+  "aliases": [
+    "Grippe",
+    "Influvac Tetra"
+  ],
+  "manufacturer": "Viatris",
+  "diseases": [
+    "influenza"
+  ],
+  "type": "inactivated",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

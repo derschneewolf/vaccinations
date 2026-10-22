@@ -1,0 +1,23 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "infanrix-hexa",
+  "name": "Infanrix hexa",
+  "aliases": [
+    "6-fach",
+    "Sechsfach"
+  ],
+  "manufacturer": "GSK",
+  "diseases": [
+    "diphtheria",
+    "tetanus",
+    "pertussis",
+    "polio",
+    "hib",
+    "hepatitis-b"
+  ],
+  "type": "inactivated",
+  "variant": "pediatric",
+  "markets": [
+    "DE"
+  ]
+}

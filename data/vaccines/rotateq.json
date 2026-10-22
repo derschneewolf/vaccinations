@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "rotateq",
+  "name": "RotaTeq",
+  "aliases": [
+    "Rotavirus"
+  ],
+  "manufacturer": "MSD",
+  "diseases": [
+    "rotavirus"
+  ],
+  "type": "live",
+  "variant": "pediatric",
+  "markets": [
+    "DE"
+  ]
+}

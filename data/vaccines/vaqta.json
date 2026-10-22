@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "vaqta",
+  "name": "Vaqta",
+  "aliases": [
+    "Hepatitis A"
+  ],
+  "manufacturer": "MSD",
+  "diseases": [
+    "hepatitis-a"
+  ],
+  "type": "inactivated",
+  "variant": "any",
+  "markets": [
+    "DE"
+  ]
+}

@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/derschneewolf/vaccinations/data/schema/schedule.schema.json",
+  "title": "Vaccination schedule",
+  "description": "A vaccination schedule (e.g. STIKO). One file per schedule in data/schedules/<id>.json. Durations are ISO 8601 (P2M, P4W, P10Y).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "version",
+    "rules"
+  ],
+  "$defs": {
+    "duration": {
+      "type": "string",
+      "pattern": "^P(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "dose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Short name shown in the UI, e.g. G1, A2, Tdap"
+        },
+        "age": {
+          "$ref": "#/$defs/duration",
+          "description": "Recommended from this age (series). In catch-up variants usually P0D = as soon as possible."
+        },
+        "dueUntil": {
+          "$ref": "#/$defs/duration",
+          "description": "Age after which the dose counts as overdue (series)."
+        },
+        "minInterval": {
+          "$ref": "#/$defs/duration",
+          "description": "Minimum interval to the previous dose."
+        },
+        "maxInterval": {
+          "$ref": "#/$defs/duration",
+          "description": "Interval to the previous dose after which the dose counts as overdue."
+        }
+      }
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "$ref": "#/$defs/id"
+    },
+    "name": {
+      "type": "object",
+      "required": [
+        "de",
+        "en"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "version": {
+      "type": "string",
+      "description": "Stand of the source, e.g. 2026-09"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "simplifications": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "diseases",
+          "kind",
+          "reference"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "diseases": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/id"
+            }
+          },
+          "kind": {
+            "enum": [
+              "series",
+              "once",
+              "seasonal"
+            ]
+          },
+          "reference": {
+            "type": "string",
+            "description": "Where in the source this rule comes from"
+          },
+          "name": {
+            "type": "object",
+            "required": [
+              "de",
+              "en"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Display name, e.g. for groups of diseases. Default: the disease names."
+          }
+        },
+        "oneOf": [
+          {
+            "properties": {
+              "id": true,
+              "diseases": true,
+              "reference": true,
+              "kind": {
+                "const": "series"
+              },
+              "until": {
+                "$ref": "#/$defs/duration",
+                "description": "The series applies before this age (end of catch-up)."
+              },
+              "countDosesFromAge": {
+                "$ref": "#/$defs/duration",
+                "description": "Only doses given from this age count."
+              },
+              "variants": {
+                "type": "array",
+                "minItems": 1,
+                "description": "Chosen by age at the first counted dose (or the current age without doses): the last variant whose fromAge is reached.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "fromAge",
+                    "doses"
+                  ],
+                  "properties": {
+                    "fromAge": {
+                      "$ref": "#/$defs/duration"
+                    },
+                    "doses": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "$ref": "#/$defs/dose"
+                      }
+                    }
+                  }
+                }
+              },
+              "then": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "every"
+                ],
+                "description": "Periodic booster after the series is complete or its age range has ended.",
+                "properties": {
+                  "every": {
+                    "$ref": "#/$defs/duration"
+                  },
+                  "grace": {
+                    "$ref": "#/$defs/duration",
+                    "description": "Overdue after due date + grace."
+                  }
+                }
+              },
+              "name": true
+            },
+            "required": [
+              "until",
+              "variants"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "id": true,
+              "diseases": true,
+              "reference": true,
+              "kind": {
+                "const": "once"
+              },
+              "fromAge": {
+                "$ref": "#/$defs/duration"
+              },
+              "bornAfter": {
+                "type": "string",
+                "format": "date"
+              },
+              "satisfiedByTotalDoses": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Fulfilled if at least this many doses exist at any age."
+              },
+              "alignWith": {
+                "$ref": "#/$defs/id",
+                "description": "Not due before the next dose of this rule (e.g. Tdap with the next Td)."
+              },
+              "doses": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/$defs/dose"
+                }
+              },
+              "name": true
+            },
+            "required": [
+              "fromAge",
+              "doses"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "id": true,
+              "diseases": true,
+              "reference": true,
+              "kind": {
+                "const": "seasonal"
+              },
+              "fromAge": {
+                "$ref": "#/$defs/duration"
+              },
+              "seasonStart": {
+                "type": "string",
+                "pattern": "^\\d{2}-\\d{2}$"
+              },
+              "seasonEnd": {
+                "type": "string",
+                "pattern": "^\\d{2}-\\d{2}$"
+              },
+              "name": true
+            },
+            "required": [
+              "fromAge",
+              "seasonStart",
+              "seasonEnd"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  }
+}
