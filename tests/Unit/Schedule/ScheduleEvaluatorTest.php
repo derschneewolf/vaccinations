@@ -141,6 +141,47 @@ class ScheduleEvaluatorTest extends TestCase {
 		$this->assertSame('2026-08-05', $this->due($result['hpv']));
 	}
 
+	public function testFourthInfantDoseIsNoSchoolAgeBooster(): void {
+		// old 3+1 schedule: 4th hexavalent dose at 22 months – the polio booster at 9–16 is still due
+		$result = $this->evaluate('2014-03-28', [
+			['infanrix-hexa', '2014-06-04'],
+			['infanrix-hexa', '2014-07-11'],
+			['infanrix-hexa', '2014-09-19'],
+			['infanrix-hexa', '2016-02-10'],
+		]);
+
+		$polio = $result['polio'];
+		$this->assertStatus(RuleStatus::DUE, $polio);
+		$this->assertSame('A1', $polio->nextLabel);
+		$this->assertSame('2023-03-28', $this->due($polio));
+		$this->assertSame(3, $polio->dosesCounted);
+		$this->assertSame(['2016-02-10'], array_map(static fn (DateTimeImmutable $date): string => $date->format('Y-m-d'), $polio->ignoredDates));
+		// neither is it the Td booster at 5–6 years
+		$this->assertStatus(RuleStatus::OVERDUE, $result['td']);
+		$this->assertSame('A1', $result['td']->nextLabel);
+		$this->assertSame(1, $result['td']->dosesIgnored);
+		// Hib and hepatitis B have no booster: the 4th dose is simply one more
+		$this->assertStatus(RuleStatus::COMPLETE, $result['hepatitis-b']);
+	}
+
+	public function testBoosterAtSchoolAgeCounts(): void {
+		$result = $this->evaluate('2014-03-28', [
+			['infanrix-hexa', '2014-06-04'],
+			['infanrix-hexa', '2014-07-11'],
+			['infanrix-hexa', '2015-02-10'],
+			['repevax', '2019-05-02'],
+			['repevax', '2023-06-01'],
+		]);
+
+		// Td/Pertussis: boosters at 5 and 9 years
+		$this->assertStatus(RuleStatus::COMPLETE, $result['td']);
+		$this->assertSame(0, $result['td']->dosesIgnored);
+		// polio has no booster at 5: that dose is an additional one, the dose at 9 is the booster
+		$this->assertStatus(RuleStatus::COMPLETE, $result['polio']);
+		$this->assertSame(4, $result['polio']->dosesCounted);
+		$this->assertSame(1, $result['polio']->dosesIgnored);
+	}
+
 	public function testMenAcwyBefore12DoesNotCountButIsNoLongerUndocumented(): void {
 		// Nimenrix at 10: STIKO recommends the dose at 12–14 regardless of earlier vaccinations
 		$result = $this->evaluate('2014-03-28', [['nimenrix', '2024-08-15']]);

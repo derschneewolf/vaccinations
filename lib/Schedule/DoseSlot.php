@@ -19,6 +19,8 @@ final readonly class DoseSlot {
 		public ?DateInterval $minInterval = null,
 		/** interval to the previous dose after which the dose is overdue */
 		public ?DateInterval $maxInterval = null,
+		/** a dose given before this age does not count for this slot, e.g. a 4th infant dose is no school-age booster */
+		public ?DateInterval $earliestAge = null,
 	) {
 	}
 }

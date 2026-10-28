@@ -30,6 +30,8 @@ Quelle: [sozialministerium.gv.at/impfplan](https://www.sozialministerium.gv.at/T
 |---|---|---|---|
 | ✅ | Diphtherie, Tetanus, Pertussis, Polio | A1 | im 6. Lebensjahr, vor Schuleintritt – auch wenn G3 < 5 Jahre zurückliegt |
 | ✅ | Diphtherie, Tetanus, Pertussis, Polio | A2 | 5 Jahre nach A1, spätestens mit 14–15 Jahren |
+
+A1 zählt erst ab 4 Jahren, A2 ab 9 Jahren (`earliestAge`). Eine frühere Dosis (z. B. eine 4. Sechsfach-Impfung im Kleinkindalter) wird als „nicht gezählt“ angezeigt.
 | ⚠️ | Meningokokken ACWY (Jugendliche) | 1 Dosis | vollendetes 10. bis 13. Lebensjahr, unabhängig von früheren Impfungen; Nachholung bis 18 |
 | ⚠️ | HPV | 2 Dosen, 6–12 Monate Abstand | ab 9 Jahren (bevorzugt 4. Schulstufe), kostenfrei bis zum 21. Geburtstag |
 

@@ -72,12 +72,11 @@ class ScheduleEvaluator {
 	 * @param list<DateTimeImmutable> $dates
 	 */
 	private function evaluateSeries(Rule $rule, DateTimeImmutable $birthDate, array $dates, DateTimeImmutable $today): RuleStatus {
-		$ignored = 0;
+		$ignored = [];
 		if ($rule->countDosesFromAge !== null) {
 			$countFrom = $birthDate->add($rule->countDosesFromAge);
-			$counted = array_values(array_filter($dates, static fn (DateTimeImmutable $date): bool => $date >= $countFrom));
-			$ignored = count($dates) - count($counted);
-			$dates = $counted;
+			$ignored = array_values(array_filter($dates, static fn (DateTimeImmutable $date): bool => $date < $countFrom));
+			$dates = array_values(array_filter($dates, static fn (DateTimeImmutable $date): bool => $date >= $countFrom));
 		}
 
 		$seriesEnd = $rule->until === null ? null : $birthDate->add($rule->until);
@@ -89,13 +88,29 @@ class ScheduleEvaluator {
 		}
 
 		$variant = $this->selectVariant($rule, $birthDate, $dates[0] ?? $today);
-		$count = count($dates);
 		if ($variant === null) {
 			return $this->status($rule, RuleStatus::NOT_APPLICABLE, $dates);
 		}
+
+		// assign the doses to the slots in order; a dose given before a slot's
+		// earliest age (e.g. a 4th infant dose instead of the school-age booster)
+		// is an additional dose and does not fill the slot
+		$counted = [];
+		foreach ($dates as $date) {
+			$slot = $variant->doses[count($counted)] ?? null;
+			if ($slot?->earliestAge !== null && $date < $birthDate->add($slot->earliestAge)) {
+				$ignored[] = $date;
+				continue;
+			}
+			$counted[] = $date;
+		}
+		$dates = $counted;
+		sort($ignored);
+
+		$count = count($dates);
 		if ($count >= count($variant->doses)) {
 			return $rule->boosterEvery !== null
-				? $this->evaluateBooster($rule, $birthDate, $dates, $today)
+				? $this->evaluateBooster($rule, $birthDate, $dates, $today, $ignored)
 				: $this->status($rule, RuleStatus::COMPLETE, $dates, ignored: $ignored);
 		}
 
@@ -122,8 +137,9 @@ class ScheduleEvaluator {
 	 * that age is reached:  min(last + every, max(last + laterEvery, laterFromAge)).
 	 *
 	 * @param list<DateTimeImmutable> $dates
+	 * @param list<DateTimeImmutable> $ignored
 	 */
-	private function evaluateBooster(Rule $rule, DateTimeImmutable $birthDate, array $dates, DateTimeImmutable $today): RuleStatus {
+	private function evaluateBooster(Rule $rule, DateTimeImmutable $birthDate, array $dates, DateTimeImmutable $today, array $ignored = []): RuleStatus {
 		$last = end($dates);
 		if ($last === false || $rule->boosterEvery === null) {
 			return $this->status($rule, RuleStatus::NOT_DOCUMENTED, $dates);
@@ -133,7 +149,7 @@ class ScheduleEvaluator {
 			$dueFrom = min($dueFrom, max($last->add($rule->laterBoosterEvery), $birthDate->add($rule->laterBoosterFromAge)));
 		}
 		$overdueFrom = $dueFrom->add($rule->boosterGrace ?? new DateInterval(self::DEFAULT_GRACE));
-		return $this->scheduled($rule, $dates, null, $dueFrom, $overdueFrom, $today);
+		return $this->scheduled($rule, $dates, null, $dueFrom, $overdueFrom, $today, $ignored);
 	}
 
 	/**
@@ -149,7 +165,7 @@ class ScheduleEvaluator {
 			return $this->status($rule, $today < $start ? RuleStatus::NOT_APPLICABLE : RuleStatus::COMPLETE, $dates);
 		}
 		$counted = array_values(array_filter($dates, static fn (DateTimeImmutable $date): bool => $date >= $start));
-		$ignored = count($dates) - count($counted);
+		$ignored = array_values(array_filter($dates, static fn (DateTimeImmutable $date): bool => $date < $start));
 		$count = count($counted);
 		if ($count >= count($rule->doses)) {
 			return $this->status($rule, RuleStatus::COMPLETE, $counted, ignored: $ignored);
@@ -264,8 +280,9 @@ class ScheduleEvaluator {
 
 	/**
 	 * @param list<DateTimeImmutable> $dates
+	 * @param list<DateTimeImmutable> $ignored documented doses that do not count
 	 */
-	private function scheduled(Rule $rule, array $dates, ?string $label, DateTimeImmutable $dueFrom, ?DateTimeImmutable $overdueFrom, DateTimeImmutable $today, int $ignored = 0): RuleStatus {
+	private function scheduled(Rule $rule, array $dates, ?string $label, DateTimeImmutable $dueFrom, ?DateTimeImmutable $overdueFrom, DateTimeImmutable $today, array $ignored = []): RuleStatus {
 		if ($today < $dueFrom) {
 			$days = (int)$today->diff($dueFrom)->days;
 			$status = $days <= self::UPCOMING_DAYS ? RuleStatus::UPCOMING : RuleStatus::PLANNED;
@@ -273,7 +290,7 @@ class ScheduleEvaluator {
 			if ($dates !== [] && $status === RuleStatus::PLANNED && $label === null) {
 				$status = RuleStatus::COMPLETE;
 			}
-		} elseif ($dates === [] && $ignored === 0) {
+		} elseif ($dates === [] && $ignored === []) {
 			// nothing at all documented; doses that do not count still prove a real history
 			$status = RuleStatus::NOT_DOCUMENTED;
 		} elseif ($overdueFrom !== null && $today > $overdueFrom) {
@@ -286,6 +303,7 @@ class ScheduleEvaluator {
 
 	/**
 	 * @param list<DateTimeImmutable> $dates
+	 * @param list<DateTimeImmutable> $ignored
 	 */
 	private function status(
 		Rule $rule,
@@ -294,7 +312,7 @@ class ScheduleEvaluator {
 		?string $label = null,
 		?DateTimeImmutable $dueFrom = null,
 		?DateTimeImmutable $overdueFrom = null,
-		int $ignored = 0,
+		array $ignored = [],
 	): RuleStatus {
 		$last = end($dates);
 		return new RuleStatus(
@@ -308,7 +326,8 @@ class ScheduleEvaluator {
 			nextOverdueFrom: $overdueFrom,
 			reference: $rule->reference,
 			names: $rule->names,
-			dosesIgnored: $ignored,
+			dosesIgnored: count($ignored),
+			ignoredDates: $ignored,
 			ruleKind: $rule->kind,
 		);
 	}

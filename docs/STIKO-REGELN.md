@@ -70,7 +70,8 @@ Ab welchem Alter alle 3 Jahre aufgefrischt wird, hängt vom Impfstoff ab (Encepu
 | Aktuell / Vollständig | nichts fällig; ggf. Datum der nächsten Auffrischung |
 
 - Eine teilweise dokumentierte Serie gilt als echte Lücke (fällig/überfällig), eine komplett leere als „nicht dokumentiert“.
-- Dosen, die laut Empfehlung nicht zählen (z. B. MenACWY vor dem 12. Geburtstag, Pneumokokken vor 60), werden als „frühere Dosis zählt nicht“ angezeigt; die Empfehlung gilt dann als fällig statt „nicht dokumentiert“.
+- Dosen, die laut Empfehlung nicht zählen (z. B. MenACWY vor dem 12. Geburtstag, Pneumokokken vor 60), werden mit Datum als „nicht gezählt, für diese Dosis zu früh gegeben“ angezeigt; die Empfehlung gilt dann als fällig statt „nicht dokumentiert“.
+- Auffrischungen haben ein Mindestalter (`earliestAge`): Td/Pertussis A1 ab 4, A2 ab 8 Jahren, Polio A1 ab 8 Jahren. Eine frühere Dosis ist eine zusätzliche Dosis der Grundimmunisierung (z. B. die 4. Sechsfach-Impfung im alten 3+1-Schema mit 11–14 Monaten) und ersetzt die Auffrischung im Schulalter nicht.
 - Eine Impfung zählt für eine Regel nur, wenn der Impfstoff **alle** Krankheiten der Regel abdeckt (z. B. Td zählt nicht für Pertussis).
 - Mehrere Einträge am selben Tag zählen als eine Dosis.
 

@@ -31,7 +31,7 @@ Die App ist nicht im Nextcloud App Store gelistet. Installiert wird sie aus dem 
 ### 1. Paket herunterladen
 
 ```sh
-VERSION=0.5.1
+VERSION=0.5.2
 curl -L -o vaccinations.tar.gz \
   "https://github.com/derschneewolf/vaccinations/releases/download/v$VERSION/vaccinations-$VERSION.tar.gz"
 ```

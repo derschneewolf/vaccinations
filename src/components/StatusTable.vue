@@ -34,7 +34,7 @@
 							{{ t('vaccinations', 'last {date}', { date: formatDate(row.lastDose) }) }}
 						</template>
 						<div v-if="row.dosesIgnored > 0" class="status__ignored">
-							{{ n('vaccinations', '%n earlier dose does not count', '%n earlier doses do not count', row.dosesIgnored) }}
+							{{ t('vaccinations', 'Not counted, given too early for this dose: {dates}', { dates: row.ignoredDates.map(formatDate).join(', ') }) }}
 						</div>
 					</td>
 					<td>{{ nextText(row) }}</td>

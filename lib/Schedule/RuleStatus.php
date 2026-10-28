@@ -44,6 +44,8 @@ final readonly class RuleStatus implements JsonSerializable {
 		public array $names = [],
 		/** documented doses that do not count, e.g. given before the recommended age */
 		public int $dosesIgnored = 0,
+		/** @var list<DateTimeImmutable> dates of the doses that do not count */
+		public array $ignoredDates = [],
 		/** Rule::KIND_* */
 		public string $ruleKind = '',
 	) {
@@ -79,6 +81,7 @@ final readonly class RuleStatus implements JsonSerializable {
 			'status' => $this->status,
 			'dosesCounted' => $this->dosesCounted,
 			'dosesIgnored' => $this->dosesIgnored,
+			'ignoredDates' => array_map(static fn (DateTimeImmutable $date): string => $date->format('Y-m-d'), $this->ignoredDates),
 			'lastDose' => $this->lastDose?->format('Y-m-d'),
 			'next' => $this->nextDueFrom === null ? null : [
 				...$this->nextType(),

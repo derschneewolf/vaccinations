@@ -34,8 +34,8 @@
             { "label": "G1", "age": "P2M", "dueUntil": "P4M" },
             { "label": "G2", "age": "P4M", "minInterval": "P8W" },
             { "label": "G3", "age": "P10M", "minInterval": "P6M", "dueUntil": "P13M" },
-            { "label": "A1", "age": "P5Y", "dueUntil": "P7Y" },
-            { "label": "A2", "age": "P10Y", "minInterval": "P5Y", "dueUntil": "P15Y" }
+            { "label": "A1", "age": "P5Y", "dueUntil": "P7Y", "earliestAge": "P4Y" },
+            { "label": "A2", "age": "P10Y", "minInterval": "P5Y", "dueUntil": "P15Y", "earliestAge": "P9Y" }
           ]
         },
         {
@@ -62,8 +62,8 @@
             { "label": "G1", "age": "P2M", "dueUntil": "P4M" },
             { "label": "G2", "age": "P4M", "minInterval": "P8W" },
             { "label": "G3", "age": "P10M", "minInterval": "P6M", "dueUntil": "P13M" },
-            { "label": "A1", "age": "P5Y", "dueUntil": "P7Y" },
-            { "label": "A2", "age": "P10Y", "minInterval": "P5Y", "dueUntil": "P15Y" }
+            { "label": "A1", "age": "P5Y", "dueUntil": "P7Y", "earliestAge": "P4Y" },
+            { "label": "A2", "age": "P10Y", "minInterval": "P5Y", "dueUntil": "P15Y", "earliestAge": "P9Y" }
           ]
         },
         {

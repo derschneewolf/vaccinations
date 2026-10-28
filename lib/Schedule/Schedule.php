@@ -123,6 +123,7 @@ final readonly class Schedule implements JsonSerializable {
 				dueUntil: self::interval($dose['dueUntil'] ?? null),
 				minInterval: self::interval($dose['minInterval'] ?? null),
 				maxInterval: self::interval($dose['maxInterval'] ?? null),
+				earliestAge: self::interval($dose['earliestAge'] ?? null),
 			);
 		}, array_values((array)$doses));
 	}

@@ -85,6 +85,7 @@ Dateien in `data/schedules/`, Schema `data/schema/schedule.schema.json`. Pro Per
 
 Regelarten:
 - `series` – Dosen nach Alter (`age`, `dueUntil`, `minInterval`, `maxInterval`), Varianten je nach Alter bei der ersten Dosis (`fromAge`), gilt bis `until`; optional `then.every` für Auffrischungen (Td alle 10 Jahre) und `then.later` für kürzere Abstände ab einem Alter (Österreich: Tdap ab 60 alle 5 Jahre)
+- `earliestAge` (Dosis einer Serie) – frühere Dosen füllen diesen Platz nicht und werden als „nicht gezählt“ mit Datum angezeigt (`ignoredDates`), z. B. eine 4. Säuglingsdosis statt der Polio-Auffrischung mit 9–16 Jahren
 - `onlyIfDocumented` (alle Arten) – Regel gilt erst, wenn mindestens eine passende Impfung eingetragen ist (STIKO: FSME)
 - `once` – ab `fromAge` (PCV20 ab 60, Zoster 2 Dosen mit `maxInterval`), optional `bornAfter`, `satisfiedByTotalDoses`, `alignWith` (Tdap mit der nächsten Td)
 - `seasonal` – jährlich ab `fromAge` in der Saison `seasonStart`–`seasonEnd`

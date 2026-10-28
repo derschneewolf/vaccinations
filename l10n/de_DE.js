@@ -12,10 +12,6 @@ OC.L10N.register(
 			"%n fällig",
 			"%n fällig"
 		],
-		"_%n earlier dose does not count_::_%n earlier doses do not count_": [
-			"%n frühere Dosis zählt nicht",
-			"%n frühere Dosen zählen nicht"
-		],
 		"_%n month ago_::_%n months ago_": [
 			"vor %n Monat",
 			"vor %n Monaten"
@@ -74,6 +70,7 @@ OC.L10N.register(
 		"Next": "Nächste",
 		"No current standard recommendation in the selected schedule – booster as advised by a doctor, e.g. before travelling.": "Im gewählten Impfschema aktuell keine Standardempfehlung – Auffrischung nach ärztlicher Einschätzung, z. B. vor Reisen.",
 		"No vaccinations recorded yet": "Noch keine Impfungen eingetragen",
+		"Not counted, given too early for this dose: {dates}": "Nicht gezählt, für diese Dosis zu früh gegeben: {dates}",
 		"Not documented": "Nicht dokumentiert",
 		"Note (optional)": "Notiz (optional)",
 		"OK": "OK",

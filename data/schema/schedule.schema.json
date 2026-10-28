@@ -46,6 +46,10 @@
         "maxInterval": {
           "$ref": "#/$defs/duration",
           "description": "Interval to the previous dose after which the dose counts as overdue."
+        },
+        "earliestAge": {
+          "$ref": "#/$defs/duration",
+          "description": "A dose given before this age does not count for this slot (series), e.g. a 4th infant dose is not the school-age booster. It is shown as a dose that does not count."
         }
       }
     }

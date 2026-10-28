@@ -52,13 +52,15 @@
               "label": "A1",
               "age": "P5Y",
               "dueUntil": "P7Y",
-              "minInterval": "P5Y"
+              "minInterval": "P5Y",
+              "earliestAge": "P4Y"
             },
             {
               "label": "A2",
               "age": "P9Y",
               "dueUntil": "P17Y",
-              "minInterval": "P5Y"
+              "minInterval": "P5Y",
+              "earliestAge": "P8Y"
             }
           ]
         },
@@ -117,13 +119,15 @@
               "label": "A1",
               "age": "P5Y",
               "dueUntil": "P7Y",
-              "minInterval": "P5Y"
+              "minInterval": "P5Y",
+              "earliestAge": "P4Y"
             },
             {
               "label": "A2",
               "age": "P9Y",
               "dueUntil": "P17Y",
-              "minInterval": "P5Y"
+              "minInterval": "P5Y",
+              "earliestAge": "P8Y"
             }
           ]
         },
@@ -193,7 +197,8 @@
               "label": "A1",
               "age": "P9Y",
               "dueUntil": "P17Y",
-              "minInterval": "P5Y"
+              "minInterval": "P5Y",
+              "earliestAge": "P8Y"
             }
           ]
         },
