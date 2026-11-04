@@ -11,7 +11,8 @@ version=$(sed -n 's:.*<version>\(.*\)</version>.*:\1:p' appinfo/info.xml)
 
 rm -rf build
 mkdir -p build/vaccinations
-cp -r appinfo lib templates img l10n js css data LICENSE build/vaccinations/
+# CHANGELOG.md: shown by the Nextcloud App Store for each release
+cp -r appinfo lib templates img l10n js css data LICENSE CHANGELOG.md build/vaccinations/
 # source maps are not needed at runtime
 find build/vaccinations/js -name '*.map' -delete
 

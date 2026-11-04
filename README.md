@@ -19,6 +19,8 @@ Eine Nextcloud-App, mit der du die Impfungen aller Personen deiner Nextcloud erf
 
 > **Hinweis:** Die App ist eine Erinnerungshilfe und ersetzt keine ärztliche Beratung. Die Regeln sind vereinfacht abgebildet; Details und bekannte Vereinfachungen stehen in [`docs/STIKO-REGELN.md`](docs/STIKO-REGELN.md) und [`docs/IMPFPLAN-AT-REGELN.md`](docs/IMPFPLAN-AT-REGELN.md).
 
+Was sich in welcher Version geändert hat, steht in der [Changelog](CHANGELOG.md).
+
 ## Voraussetzungen
 
 - Nextcloud 33, 34 oder 35
@@ -122,7 +124,7 @@ Danach im Browser einmal **Strg + F5**, damit die neue Oberfläche geladen wird.
 
 ## Neue Version veröffentlichen
 
-Version in `appinfo/info.xml` (und `package.json`) erhöhen und auf `main` pushen. Die GitHub-Action [`release.yml`](.github/workflows/release.yml) baut dann das Paket und legt das Release `v<version>` an.
+Änderungen in [`CHANGELOG.md`](CHANGELOG.md) unter einer neuen Überschrift `## <version> – <datum>` eintragen, Version in `appinfo/info.xml` (und `package.json`) erhöhen und auf `main` pushen. Der Abschnitt aus der Changelog wird zu den Release-Notizen. Die GitHub-Action [`release.yml`](.github/workflows/release.yml) baut dann das Paket und legt das Release `v<version>` an.
 
 ## Mitmachen
 

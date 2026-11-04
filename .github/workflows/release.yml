@@ -52,7 +52,16 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
+          # release notes: the section "## <version> – <date>" of CHANGELOG.md
+          awk -v heading="## $VERSION" 'index($0, heading) == 1 && (length($0) == length(heading) || substr($0, length(heading) + 1, 1) == " ") { found = 1; next }
+            found && /^## / { exit }
+            found { print }' CHANGELOG.md > notes.md
+          if ! grep -q '[^[:space:]]' notes.md; then
+            echo "::warning::CHANGELOG.md has no section for $VERSION"
+            : > notes.md
+          fi
+          printf '\n---\nInstallation und Update: siehe [README](https://github.com/%s#installation).\n' "$GITHUB_REPOSITORY" >> notes.md
           gh release create "v$VERSION" "build/vaccinations-$VERSION.tar.gz" \
             --target "$GITHUB_SHA" \
             --title "v$VERSION" \
-            --notes "Installation und Update: siehe [README](https://github.com/$GITHUB_REPOSITORY#installation)."
+            --notes-file notes.md
