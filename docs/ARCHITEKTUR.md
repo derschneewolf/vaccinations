@@ -59,6 +59,12 @@ Fehler: 400 `{field, message}`, 403 bei fremden Personen, 404 bei fremden oder u
 
 „Nicht dokumentiert“ zählt bewusst als rot: Die Impfung muss entweder nachgetragen oder nachgeholt werden. Der Tooltip listet die betroffenen Impfungen. Nach jeder Änderung meldet `PersonView` den neuen Status an die Liste (`status-loaded`), die Ampel ist also ohne Neuladen aktuell.
 
+## Druckansicht
+
+`PrintSheet.vue` wird per `<Teleport>` direkt in `<body>` gerendert und ist nur in `@media print` sichtbar; alle anderen Kinder von `<body>` werden beim Druck ausgeblendet. So stören weder die Scroll-Container noch `position: fixed` des Nextcloud-Layouts. Bildschirmtabelle und Druck nutzen dieselbe Aufbereitung aus `src/status.js`.
+
+Inhalt: offene Empfehlungen (überfällig, fällig, nicht dokumentiert, demnächst) mit Begründung, aktuelle/vollständige, spätere Empfehlungen in einer Zeile, weitere Impfungen, Impfhistorie, Notizlinien, Grundlage und Hinweis.
+
 ## Benachrichtigungen
 
 - Täglicher Job `OCA\Vaccinations\BackgroundJob\DailyCheck` prüft alle Personen mit mindestens einer eingetragenen Impfung.

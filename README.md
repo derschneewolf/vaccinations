@@ -11,6 +11,7 @@ Eine Nextcloud-App, mit der du die Impfungen aller Personen deiner Nextcloud erf
   - **STIKO-Empfehlungen (Deutschland)**, Stand 2026-10 – inkl. FSME, sobald eine FSME-Impfung eingetragen ist
   - **Impfplan Österreich** 2026/27 (Version 1.1)
 - **Ampel in der Personenliste**: rot bei überfälligen oder nicht dokumentierten Impfungen, gelb bei fälligen oder in den nächsten 2 Monaten anstehenden, grün wenn alles aktuell ist – der Tooltip nennt die Impfungen.
+- **Druckansicht** für den Arztbesuch: offene Impfungen mit Begründung (seit wann überfällig, welche Dosis nicht zählt), aktuelle Impfungen, Impfhistorie und Platz für Notizen – auf A4, ohne Navigation und Scrollbalken.
 - **Weitere Impfungen** ohne Standardempfehlung (z. B. Reiseimpfungen) mit „vor X Jahren“.
 - **Betreuer**: Eltern pflegen die Daten ihrer Kinder, die eigene Nextcloud-Konten haben. Jeder sieht nur sich selbst und die Personen, die er betreut.
 - **Benachrichtigungen** in Nextcloud, wenn eine Impfung demnächst ansteht, fällig oder überfällig wird.
@@ -31,7 +32,7 @@ Die App ist nicht im Nextcloud App Store gelistet. Installiert wird sie aus dem 
 ### 1. Paket herunterladen
 
 ```sh
-VERSION=0.5.2
+VERSION=0.6.0
 curl -L -o vaccinations.tar.gz \
   "https://github.com/derschneewolf/vaccinations/releases/download/v$VERSION/vaccinations-$VERSION.tar.gz"
 ```
@@ -115,6 +116,7 @@ Danach im Browser einmal **Strg + F5**, damit die neue Oberfläche geladen wird.
 
 - **Impfungen** im Menü öffnen, links die Person wählen, oben Geburtsdatum und Impfschema setzen.
 - **Impfung eintragen** – am besten den Impfpass von neu nach alt abtippen.
+- **Drucken** erzeugt ein A4-Blatt für den Arztbesuch; im Druckdialog lässt es sich auch als PDF speichern.
 - Impfungen, die gar nicht erfasst sind, erscheinen als **„nicht dokumentiert“** statt als überfällig; eine angefangene, unvollständige Serie gilt dagegen als echte Lücke.
 - Benachrichtigungen kommen einmal täglich über den Hintergrundjob. Sofort prüfen: `occ vaccinations:notify`.
 

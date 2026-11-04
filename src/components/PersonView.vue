@@ -24,12 +24,20 @@
 					:searchable="false"
 					@update:model-value="saveSchedule" />
 			</div>
-			<NcButton variant="primary" @click="openCreate">
-				<template #icon>
-					<NcIconSvgWrapper :path="mdiPlus" />
-				</template>
-				{{ t('vaccinations', 'Add vaccination') }}
-			</NcButton>
+			<div class="person__buttons">
+				<NcButton variant="primary" @click="openCreate">
+					<template #icon>
+						<NcIconSvgWrapper :path="mdiPlus" />
+					</template>
+					{{ t('vaccinations', 'Add vaccination') }}
+				</NcButton>
+				<NcButton :disabled="!status || loading" @click="print">
+					<template #icon>
+						<NcIconSvgWrapper :path="mdiPrinter" />
+					</template>
+					{{ t('vaccinations', 'Print') }}
+				</NcButton>
+			</div>
 		</header>
 
 		<StatusTable v-if="status && catalog"
@@ -108,6 +116,12 @@
 			</section>
 		</template>
 
+		<PrintSheet v-if="status && !loading"
+			:person="person"
+			:status="status"
+			:catalog="catalog"
+			:records="records" />
+
 		<RecordDialog v-if="dialogOpen"
 			:catalog="catalog"
 			:record="recordToEdit"
@@ -126,7 +140,7 @@
 </template>
 
 <script setup>
-import { mdiDelete, mdiNeedle, mdiPencil, mdiPlus } from '@mdi/js'
+import { mdiDelete, mdiNeedle, mdiPencil, mdiPlus, mdiPrinter } from '@mdi/js'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -139,6 +153,7 @@ import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
+import PrintSheet from './PrintSheet.vue'
 import RecordDialog from './RecordDialog.vue'
 import StatusTable from './StatusTable.vue'
 import { api } from '../api.js'
@@ -184,6 +199,11 @@ watch(() => [props.person.birthDate, props.person.scheduleId], loadStatus)
 // newest first; same day: most recently entered first
 const sortedRecords = computed(() => [...records.value].sort((a, b) =>
 	b.administeredOn.localeCompare(a.administeredOn) || b.id - a.id))
+
+/** The print sheet (PrintSheet) replaces the page when printing. */
+function print() {
+	window.print()
+}
 
 function openCreate() {
 	recordToEdit.value = null
@@ -288,6 +308,12 @@ async function storeBirthDate(birthDate) {
 
 	&__schedule {
 		width: 100%;
+	}
+
+	&__buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: calc(var(--default-grid-baseline) * 2);
 	}
 
 	&__hint {

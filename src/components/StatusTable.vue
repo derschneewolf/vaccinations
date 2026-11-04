@@ -34,7 +34,7 @@
 							{{ t('vaccinations', 'last {date}', { date: formatDate(row.lastDose) }) }}
 						</template>
 						<div v-if="row.dosesIgnored > 0" class="status__ignored">
-							{{ t('vaccinations', 'Not counted, given too early for this dose: {dates}', { dates: row.ignoredDates.map(formatDate).join(', ') }) }}
+							{{ ignoredText(row) }}
 						</div>
 					</td>
 					<td>{{ nextText(row) }}</td>
@@ -101,11 +101,11 @@
 </template>
 
 <script setup>
-import { getLanguage, n, t } from '@nextcloud/l10n'
+import { n, t } from '@nextcloud/l10n'
 import { computed } from 'vue'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
-import { ruleName } from '../attention.js'
-import { formatDate, fromIsoDate, toIsoDate } from '../dates.js'
+import { formatDate } from '../dates.js'
+import { ignoredText, nextText, otherRows as buildOtherRows, scheduleName as nameOf, statusLabel, statusRows, timeSince } from '../status.js'
 
 const props = defineProps({
 	/** { schedule, rules } from the status API */
@@ -115,118 +115,14 @@ const props = defineProps({
 	records: { type: Array, default: () => [] },
 })
 
-// most urgent first
-const ORDER = ['overdue', 'due', 'not_documented', 'upcoming', 'missing_birth_date', 'planned', 'complete', 'documented']
-
 const schedule = computed(() => props.status.schedule)
-const scheduleName = computed(() => {
-	const names = schedule.value?.names ?? {}
-	return names[getLanguage().split(/[-_]/)[0]] ?? names.en ?? schedule.value?.id
-})
+const scheduleName = computed(() => nameOf(schedule.value))
 const missingBirthDate = computed(() => props.status.rules.some((rule) => rule.status === 'missing_birth_date'))
 
-const allRows = computed(() => props.status.rules
-	// rules without a current recommendation are visible in the history anyway
-	.filter((rule) => rule.status !== 'documented')
-	.map((rule) => ({ ...rule, name: ruleName(rule, props.catalog) }))
-	.sort((a, b) => ORDER.indexOf(a.status) - ORDER.indexOf(b.status)
-		|| (a.next?.dueFrom ?? '9999').localeCompare(b.next?.dueFrom ?? '9999')
-		|| a.name.localeCompare(b.name)))
-
-// recommendations more than two years ahead (e.g. 60+ for a 45-year-old) are collapsed
-const laterThreshold = (() => {
-	const date = new Date()
-	date.setFullYear(date.getFullYear() + 2)
-	return toIsoDate(date)
-})()
-const isLater = (row) => row.status === 'planned' && row.dosesCounted === 0 && (row.next?.dueFrom ?? '') > laterThreshold
-const rows = computed(() => allRows.value.filter((row) => !isLater(row)))
-const laterRows = computed(() => allRows.value.filter(isLater))
-
-// doses the status table above does not account for (e.g. typhoid, hepatitis A,
-// polio in adults, a MenC-only dose next to the MenACWY row); identical histories share a row
-const otherRows = computed(() => {
-	const datesByDisease = new Map()
-	for (const record of props.records) {
-		const vaccineDiseases = props.catalog.vaccine(record.vaccineId)?.diseaseIds ?? []
-		// a row accounts for a dose only if the vaccine covers all diseases of the row
-		const isAccountedFor = (diseaseId) => rows.value.some((row) => row.diseaseIds.includes(diseaseId)
-			&& row.diseaseIds.every((id) => vaccineDiseases.includes(id)))
-		for (const diseaseId of vaccineDiseases) {
-			if (!isAccountedFor(diseaseId)) {
-				datesByDisease.set(diseaseId, new Set([...(datesByDisease.get(diseaseId) ?? []), record.administeredOn]))
-			}
-		}
-	}
-	const groups = new Map()
-	for (const [diseaseId, dates] of datesByDisease) {
-		const sorted = [...dates].sort()
-		const key = sorted.join('|')
-		groups.set(key, { key, dates: sorted, diseaseIds: [...(groups.get(key)?.diseaseIds ?? []), diseaseId] })
-	}
-	return [...groups.values()]
-		.map((group) => ({
-			key: group.key,
-			name: group.diseaseIds.map(props.catalog.diseaseName).join(', '),
-			doses: group.dates.length,
-			lastDose: group.dates.at(-1),
-		}))
-		.sort((a, b) => a.name.localeCompare(b.name))
-})
-
-function timeSince(isoDate) {
-	const date = fromIsoDate(isoDate)
-	const now = new Date()
-	const months = (now.getFullYear() - date.getFullYear()) * 12 + now.getMonth() - date.getMonth() - (now.getDate() < date.getDate() ? 1 : 0)
-	if (months < 1) {
-		return t('vaccinations', 'less than a month ago')
-	}
-	if (months < 24) {
-		return n('vaccinations', '%n month ago', '%n months ago', months)
-	}
-	return n('vaccinations', '%n year ago', '%n years ago', Math.floor(months / 12))
-}
-
-function statusLabel(status) {
-	return {
-		overdue: t('vaccinations', 'Overdue'),
-		due: t('vaccinations', 'Due'),
-		not_documented: t('vaccinations', 'Not documented'),
-		upcoming: t('vaccinations', 'Soon'),
-		planned: t('vaccinations', 'Up to date'),
-		complete: t('vaccinations', 'Complete'),
-		documented: t('vaccinations', 'Documented'),
-		missing_birth_date: t('vaccinations', 'Date of birth missing'),
-	}[status] ?? status
-}
-
-function nextText(row) {
-	if (!row.next) {
-		return ''
-	}
-	const date = formatDate(row.next.dueFrom)
-	if (row.status === 'not_documented') {
-		// a date long ago (e.g. the 60th birthday 15 years back) says nothing useful
-		const yearAgo = new Date()
-		yearAgo.setFullYear(yearAgo.getFullYear() - 1)
-		return fromIsoDate(row.next.dueFrom) < yearAgo
-			? t('vaccinations', 'recommended')
-			: t('vaccinations', 'recommended since {date}', { date })
-	}
-	switch (row.next.type) {
-	case 'dose':
-		return t('vaccinations', 'Dose {number} from {date}', { number: row.next.doseNumber, date })
-	case 'booster':
-		return t('vaccinations', 'Booster from {date}', { date })
-	case 'season':
-		return t('vaccinations', 'Season from {date}', { date })
-	default:
-		// a named vaccination (Tdap, MenACWY …); a label equal to the row name ("RSV") adds nothing
-		return row.next.label && row.next.label.toLowerCase() !== row.name.toLowerCase()
-			? t('vaccinations', '{dose} from {date}', { dose: row.next.label, date })
-			: t('vaccinations', 'from {date}', { date })
-	}
-}
+const statusView = computed(() => statusRows(props.status, props.catalog))
+const rows = computed(() => statusView.value.rows)
+const laterRows = computed(() => statusView.value.laterRows)
+const otherRows = computed(() => buildOtherRows(props.records, props.catalog, rows.value))
 </script>
 
 <style scoped lang="scss">
