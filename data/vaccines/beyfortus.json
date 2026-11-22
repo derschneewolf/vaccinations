@@ -1,0 +1,12 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "beyfortus",
+  "name": "Beyfortus",
+  "aliases": ["Nirsevimab"],
+  "manufacturer": "Sanofi",
+  "diseases": ["rsv"],
+  "type": "other",
+  "variant": "pediatric",
+  "markets": ["DE", "AT"],
+  "discontinued": false
+}

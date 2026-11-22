@@ -1,0 +1,12 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "generic-dtp",
+  "name": "Generic DTP",
+  "aliases": ["DPT"],
+  "manufacturer": "unknown",
+  "diseases": ["diphtheria", "tetanus", "pertussis"],
+  "type": "inactivated",
+  "variant": "pediatric",
+  "markets": ["DE", "AT"],
+  "discontinued": true
+}

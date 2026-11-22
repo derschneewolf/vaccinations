@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "mmvax",
+  "name": "MMVax",
+  "manufacturer": "MSD",
+  "diseases": ["measles", "mumps"],
+  "type": "live",
+  "markets": ["DE","AT"],
+  "discontinued": true
+}

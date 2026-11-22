@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "polio-sabin-sb",
+  "name": "Polio Sabin (oral)",
+  "manufacturer": "SmithKline Beecham",
+  "diseases": ["polio"],
+  "type": "live",
+  "markets": ["AT"],
+  "discontinued": true
+}
