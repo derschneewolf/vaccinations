@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "anatoxal-dite-berna-pediatric",
+  "name": "Anatoxal Di Te Berna",
+  "manufacturer": "Berna",
+  "diseases": ["diphtheria", "tetanus"],
+  "type": "toxoid",
+  "variant": "pediatric",
+  "markets": ["AT"],
+  "discontinued": true
+}

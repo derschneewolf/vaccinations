@@ -1,0 +1,12 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "prohibit-hib",
+  "name": "ProHIBiT Haemophilus-b-Konjugatimpfstoff",
+  "aliases": ["HiB"],
+  "manufacturer": "Connaught Laboratories",
+  "diseases": ["hib"],
+  "type": "subunit",
+  "variant": "any",
+  "markets": ["AT"],
+  "discontinued": true
+}

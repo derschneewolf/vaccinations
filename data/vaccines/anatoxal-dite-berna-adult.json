@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "anatoxal-dite-berna-adult",
+  "name": "Anatoxal Di Te N Berna",
+  "manufacturer": "Berna",
+  "diseases": ["diphtheria", "tetanus"],
+  "type": "toxoid",
+  "variant": "adult",
+  "markets": ["AT"],
+  "discontinued": true
+}

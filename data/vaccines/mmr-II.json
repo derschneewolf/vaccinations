@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema/vaccine.schema.json",
+  "id": "mmr-II",
+  "name": "M-M-R II",
+  "manufacturer": "MSD",
+  "diseases": ["measles", "mumps", "rubella"],
+  "type": "live",
+  "markets": ["AT"],
+  "discontinued": true
+}
